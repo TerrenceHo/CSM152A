@@ -42,7 +42,7 @@ module floating_point_converterTB;
 
 	initial begin
 		// Initialize Inputs
-		D = 0;
+		D = ;
 
 		// Wait 100 ns for global reset to finish
 		#100;
