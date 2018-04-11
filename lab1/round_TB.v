@@ -25,7 +25,6 @@
 module round_TB;
 
 	// Inputs
-	reg leading_zeros;
 	reg [11:0] sign_rep;
 	reg [3:0] F;
 	reg [2:0] E;
@@ -36,7 +35,6 @@ module round_TB;
 
 	// Instantiate the Unit Under Test (UUT)
 	round uut (
-		.leading_zeros(leading_zeros), 
 		.sign_rep(sign_rep), 
 		.F(F), 
 		.E(E), 
@@ -46,7 +44,6 @@ module round_TB;
 
 	initial begin
 		// Initialize Inputs
-		leading_zeros = 0;
 		sign_rep = 0;
 		F = 0;
 		E = 0;
@@ -54,21 +51,18 @@ module round_TB;
 		// Wait 100 ns for global reset to finish
 		#100;
 		
-		leading_zeros = 6;
 		sign_rep = 12'b000000101100;
 		F = 4'b1011;
 		E = 3'b010;
 		
 		#100;
 		
-		leading_zeros = 6;
 		sign_rep = 12'b000000101101;
 		F = 4'b1011;
 		E = 3'b010;
 		
 		#100;
 		
-		leading_zeros = 6;
 		sign_rep = 12'b000000101110;
 		F = 4'b1011;
 		E = 3'b010;
@@ -76,14 +70,12 @@ module round_TB;
 		
 		#100;
 		
-		leading_zeros = 6;
 		sign_rep = 12'b000000101111;
 		F = 4'b1011;
 		E = 3'b010;
 		
 		#100;
 		
-		leading_zeros = 5;
 		sign_rep = 12'b000001111101;
 		F = 4'b1111;
 		E = 3'b011;

@@ -18,9 +18,9 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module round(leading_zeros, sign_rep, F, E, FO, EO);
+module round(sign_rep, F, E, FO, EO);
 
-	input leading_zeros;
+	reg leading_zeros;
 	input[11:0] sign_rep;
 	input wire[3:0] F;
 	input wire[2:0] E;
@@ -31,9 +31,28 @@ module round(leading_zeros, sign_rep, F, E, FO, EO);
 	reg fifth_bit;
 	
 	always @* begin
-	//find the 5th bit which decides the rounding
-	fifth_position = (12 - leading_zeros) - 5;
-	fifth_bit = sign_rep[fifth_position];
+	
+	case(E)
+		3'b111: leading_zeros = 1;
+		3'b110: leading_zeros = 2;
+		3'b101: leading_zeros = 3;
+		3'b100: leading_zeros = 4;
+		3'b011: leading_zeros = 5;
+		3'b010: leading_zeros = 6;
+		3'b001: leading_zeros = 7;
+		default: leading_zeros = 8;
+	endcase
+
+	if (leading_zeros != 8)
+	begin
+		//find the 5th bit which decides the rounding
+		fifth_position = (12 - leading_zeros) - 5;
+		fifth_bit = sign_rep[fifth_position];
+	end
+	else
+	begin
+		fifth_bit = 1'b0;
+	end
 	
 	FO = F;
 	EO = E;
