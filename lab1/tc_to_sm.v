@@ -18,13 +18,13 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module tc_to_sm( input, output, sign );
+module tc_to_sm( in, out, sign);
 input [11:0] in;
-output [11:] out;
+output [11:0] out;
 output sign;
 
 assign sign = in[11];
 
-assign output = (sign == 0) ? in : *~in + 1b1);
+assign out = (sign == 0) ? in : (~in + 1'b1);
 
 endmodule

@@ -28,10 +28,10 @@ module floating_point_converter(
 	 output wire[3:0] F;
 	 
 	 // temp wires
-	 output wire[11:0] temp_abs;
+	 //output wire[11:0] temp_abs;
 	 
 	 // Modules that are executed sequentially
-	 tc_to_sm block1(.input(D), .output(temp_abs), .sign(S));
+	 tc_to_sm block1(.in(D), .out(temp_abs), .sign(S));
 	 //count_extract block2();
 	 //round block3();
 
