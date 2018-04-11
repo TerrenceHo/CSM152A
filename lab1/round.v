@@ -30,7 +30,7 @@ module round(sign_rep, F, E, FO, EO);
 	reg fifth_position;
 	reg fifth_bit;
 	
-	always @* begin
+	always @(*) begin
 	
 	case(E)
 		3'b111: leading_zeros = 1;
@@ -44,11 +44,13 @@ module round(sign_rep, F, E, FO, EO);
 	endcase
 
 	if (leading_zeros != 8)
-	begin
+		begin
 		//find the 5th bit which decides the rounding
+		
 		fifth_position = (12 - leading_zeros) - 5;
-		fifth_bit = sign_rep[fifth_position];
-	end
+		fifth_bit = sign_rep[(12 - leading_zeros) - 5];
+		//fifth_bit = 1'b1;
+		end
 	else
 	begin
 		fifth_bit = 1'b0;
@@ -67,12 +69,12 @@ module round(sign_rep, F, E, FO, EO);
 					begin
 					//process the overflow
 					FO = 4'b1000;
-					EO = E + 1;
+					EO = E + 3'b001;
 					end
 			end
 		else
 			begin
-				FO = F + 1;
+				FO = F + 4'b0001;
 				EO = E;
 			end
 	end
