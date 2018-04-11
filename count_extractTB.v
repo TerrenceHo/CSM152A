@@ -4,15 +4,15 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   23:16:38 04/10/2018
-// Design Name:   floating_point_converter
-// Module Name:   /home/ise/SharedFolderVM/CSM152A/lab1/floating_point_converterTB.v
-// Project Name:  intro
+// Create Date:   00:48:09 04/11/2018
+// Design Name:   count_extract
+// Module Name:   /home/ise/Xilinx_host/CSM152A/count_extractTB.v
+// Project Name:  Lab1
 // Target Device:  
 // Tool versions:  
 // Description: 
 //
-// Verilog Test Fixture created by ISE for module: floating_point_converter
+// Verilog Test Fixture created by ISE for module: count_extract
 //
 // Dependencies:
 // 
@@ -22,31 +22,29 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module floating_point_converterTB;
+module count_extractTB;
 
 	// Inputs
-	reg [0:11] D;
+	reg [11:0] s_m_in;
 
 	// Outputs
-	wire S;
-	wire [0:2] E;
-	wire [0:3] F;
+	wire [2:0] exp;
+	wire [3:0] significand;
 
 	// Instantiate the Unit Under Test (UUT)
-	floating_point_converter uut (
-		.D(D), 
-		.S(S), 
-		.E(E), 
-		.F(F)
+	count_extract uut (
+		.s_m_in(s_m_in), 
+		.exp(exp), 
+		.significand(significand)
 	);
 
 	initial begin
 		// Initialize Inputs
-		D = 0;
+		s_m_in = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;
-		D = 12'b000000000001;
+      s_m_in = 12'b001000000000;  
 		// Add stimulus here
 
 	end
