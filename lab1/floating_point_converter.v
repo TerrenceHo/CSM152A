@@ -23,7 +23,7 @@ module floating_point_converter(
     );
 	 
 	 input wire[11:0] D;
-	 output wire S;
+	 output wire S;s
 	 output wire[2:0] E;
 	 output wire[3:0] F;
 	 
