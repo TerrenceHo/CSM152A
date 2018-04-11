@@ -47,6 +47,21 @@ module floating_point_converterTB;
 		// Wait 100 ns for global reset to finish
 		#100;
 		D = 12'b000000000001;
+		
+		#100
+		D = 12'b000000101100;
+		
+		#100
+		D = 12'b000000101110;
+		
+		#100
+		D = 12'b000000101101;
+		
+		#100
+		D = 12'b000000101111;
+		
+		#100
+		D = 12'b000001111101;
 		// Add stimulus here
 
 	end
