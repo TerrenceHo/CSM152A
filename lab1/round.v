@@ -18,35 +18,45 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module round(input leading_zeros, input sign_rep[11:0], input F[3:0]);
-s
-	integer 5th_position, 5th_bit;
+module round(leading_zeros, sign_rep, F, E, FO, EO);
+
+	input leading_zeros;
+	input[11:0] sign_rep;
+	input wire[3:0] F;
+	input wire[2:0] E;
+	output reg[3:0] FO;
+	output reg[2:0] EO;
+
+	reg fifth_position;
+	reg fifth_bit;
 	
+	always @* begin
 	//find the 5th bit which decides the rounding
-	5th_position = (12 - leading_zeros - 5);
-	5th_bit = sign_rep[5th_position];
+	fifth_position = (12 - leading_zeros) - 5;
+	fifth_bit = sign_rep[fifth_position];
 	
-	if (5th_bit)
+	FO = F;
+	EO = E;
+	
+	if (fifth_bit == 1'b1)
 	begin
 		//check for overflow
 		if(F[3:0] == 4'b1111)
 			begin
 				//check to see if there will be an overflow, and if that's possible
-				if(E[2:0] == 3'b111)
-					begin
-					end
-				else
+				if(E[2:0] != 3'b111)
 					begin
 					//process the overflow
-					F = {1'b0, F[2:0]}
-					F = F + 1;
-					E = E + 1;
+					FO = 4'b1000;
+					EO = E + 1;
 					end
 			end
 		else
 			begin
-				F = F + 1;
+				FO = F + 1;
+				EO = E;
 			end
+	end
 	end
 
 endmodule
