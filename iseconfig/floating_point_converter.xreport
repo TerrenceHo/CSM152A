@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2018-04-11T01:01:22</DateModified>
+  <DateModified>2018-04-16T17:24:34</DateModified>
   <ModuleName>floating_point_converter</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>/home/ise/Xilinx_host/CSM152A/iseconfig/floating_point_converter.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/home/ise/Lab1</ImplementationReportsDirectory>
+  <SavedFilePath>/home/ise/M152A/CSM152A/iseconfig/floating_point_converter.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>/home/ise/M152A/CSM152A/lab1/</ImplementationReportsDirectory>
   <DateInitialized>2018-04-11T00:55:50</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

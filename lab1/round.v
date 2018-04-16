@@ -27,7 +27,6 @@ module round(sign_rep, F, E, FO, EO);
 	output reg[3:0] FO;
 	output reg[2:0] EO;
 
-	reg fifth_position;
 	reg fifth_bit;
 	
 	always @(*) begin
@@ -46,8 +45,6 @@ module round(sign_rep, F, E, FO, EO);
 	if (leading_zeros != 8)
 		begin
 		//find the 5th bit which decides the rounding
-		
-		fifth_position = (12 - leading_zeros) - 5;
 		fifth_bit = sign_rep[(12 - leading_zeros) - 5];
 		//fifth_bit = 1'b1;
 		end
