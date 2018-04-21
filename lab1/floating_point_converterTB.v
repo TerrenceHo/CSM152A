@@ -25,12 +25,12 @@
 module floating_point_converterTB;
 
 	// Inputs
-	reg [0:11] D;
+	reg [11:0] D;
 
 	// Outputs
 	wire S;
-	wire [0:2] E;
-	wire [0:3] F;
+	wire [2:0] E;
+	wire [3:0] F;
 
 	// Instantiate the Unit Under Test (UUT)
 	floating_point_converter uut (
@@ -66,6 +66,12 @@ module floating_point_converterTB;
 		#100
 		D = 12'b010011000100;
 		// Add stimulus here
+		
+		#100
+		D = 12'b110000101111;
+		
+		#100
+		D = 12'b100000000000;
 
 	end
       
