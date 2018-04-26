@@ -48,6 +48,12 @@ module floating_point_converterTB;
 		#100;
       D = 12'b000000000001;  
 		// Add stimulus here
+		
+		#100
+		D = 12'b110000101111;
+		
+		#100
+		D = 12'b100000000000;
 
 	end
       

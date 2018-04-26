@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module round(sign_rep, F, E, FO, EO);
 
-	reg leading_zeros;
+	reg[4:0] leading_zeros;
 	input[11:0] sign_rep;
 	input wire[3:0] F;
 	input wire[2:0] E;
@@ -68,6 +68,11 @@ module round(sign_rep, F, E, FO, EO);
 					FO = 4'b1000;
 					EO = E + 3'b001;
 					end
+				else
+					begin
+					FO = 4'b1111;
+					EO = 3'b111;
+					end
 			end
 		else
 			begin
@@ -75,6 +80,13 @@ module round(sign_rep, F, E, FO, EO);
 				EO = E;
 			end
 	end
+	
+	//to account for unrealistic cases
+	if (sign_rep == 12'b100000000000)
+		begin
+			FO = 4'b1111;
+			EO = 3'b111;
+		end
 	end
-
+		
 endmodule
