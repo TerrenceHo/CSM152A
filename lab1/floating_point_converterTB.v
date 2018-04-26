@@ -4,10 +4,10 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   23:16:38 04/10/2018
+// Create Date:   00:05:07 04/11/2018
 // Design Name:   floating_point_converter
-// Module Name:   /home/ise/SharedFolderVM/CSM152A/lab1/floating_point_converterTB.v
-// Project Name:  intro
+// Module Name:   /home/ise/Xilinx_host/CSM152A/floating_point_converterTB.v
+// Project Name:  Lab1
 // Target Device:  
 // Tool versions:  
 // Description: 
@@ -25,12 +25,12 @@
 module floating_point_converterTB;
 
 	// Inputs
-	reg [0:11] D;
+	reg [11:0] D;
 
 	// Outputs
 	wire S;
-	wire [0:2] E;
-	wire [0:3] F;
+	wire [2:0] E;
+	wire [3:0] F;
 
 	// Instantiate the Unit Under Test (UUT)
 	floating_point_converter uut (
@@ -46,25 +46,7 @@ module floating_point_converterTB;
 
 		// Wait 100 ns for global reset to finish
 		#100;
-		D = 12'b000000000001;
-		
-		#100
-		D = 12'b000000101100;
-		
-		#100
-		D = 12'b000000101110;
-		
-		#100
-		D = 12'b000000101101;
-		
-		#100
-		D = 12'b000000101111;
-		
-		#100
-		D = 12'b000001111101;
-		
-		#100
-		D = 12'b010011000100;
+      D = 12'b000000000001;  
 		// Add stimulus here
 
 	end
