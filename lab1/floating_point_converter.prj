@@ -1,0 +1,4 @@
+verilog work "tc_to_sm.v"
+verilog work "round.v"
+verilog work "../count_extract.v"
+verilog work "floating_point_converter.v"

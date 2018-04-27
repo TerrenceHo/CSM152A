@@ -5,5 +5,8 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
+<msg type="warning" file="HDLCompiler" num="1016" delta="unknown" >"/home/ise/M152A/CSM152A/lab2/lab2/tb.v" Line 56: Port <arg fmt="%s" index="1">btn1</arg> is not connected to this instance
+</msg>
+
 </messages>
 

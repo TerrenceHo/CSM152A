@@ -1,0 +1,1 @@
+xst -intstyle ise -ifn "/home/ise/M152A/CSM152A/lab1/floating_point_converter.xst" -ofn "/home/ise/M152A/CSM152A/lab1/floating_point_converter.syr" 
