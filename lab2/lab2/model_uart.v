@@ -20,7 +20,7 @@ module model_uart(/*AUTOARG*/
    event     evTxBit;
    event     evTxByte;
    reg       TX;
-	reg [31:0] finalResult = 32'b0;
+	reg [55:0] finalResult = 56'b0;
 
    initial
      begin
@@ -41,7 +41,7 @@ module model_uart(/*AUTOARG*/
 		  if (rxData == 10)
 			begin
 				$display ("%d %s Received byte %02x (%s)", $stime, name, finalResult, finalResult);		
-				finalResult = 32'b0;
+				finalResult = 56'b0;
 			end
 		  else
 			begin

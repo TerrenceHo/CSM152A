@@ -2,7 +2,7 @@ module uart_top (/*AUTOARG*/
    // Outputs
    o_tx, o_tx_busy, o_rx_data, o_rx_valid,
    // Inputs
-   i_rx, i_tx_data, i_tx_stb, clk, rst
+   i_rx, i_tx_reg, i_tx_data, i_tx_stb, clk, rst
    );
 
 `include "seq_definitions.v"
@@ -14,6 +14,7 @@ module uart_top (/*AUTOARG*/
    output [7:0]             o_rx_data;
    output                   o_rx_valid;
    
+	input [1:0]					 i_tx_reg;
    input [seq_dp_width-1:0] i_tx_data;
    input                    i_tx_stb;
    
@@ -21,9 +22,12 @@ module uart_top (/*AUTOARG*/
    input                    rst;
 
    parameter stIdle = 0;
-   parameter stNib1 = 1;
-   parameter stNL   = uart_num_nib+1;
-   parameter stCR   = uart_num_nib+2;
+	parameter stR 	  = 1;
+	parameter stN	  = 2;
+	parameter stC	  = 3;
+   parameter stNib1 = 4;
+   parameter stNL   = uart_num_nib+4;
+   parameter stCR   = uart_num_nib+5;
    
    /*AUTOWIRE*/
    // Beginning of automatic wires (for undeclared instantiated-module outputs)
@@ -37,7 +41,7 @@ module uart_top (/*AUTOARG*/
    wire                 tfifo_rd;
    reg                  tfifo_rd_z;
    reg [seq_dp_width-1:0]  tx_data;
-   reg [2:0]               state;
+   reg [3:0]               state;
 
    assign o_tx_busy = (state!=stIdle);
    
@@ -49,17 +53,23 @@ module uart_top (/*AUTOARG*/
          stIdle:
            if (i_tx_stb)
              begin
-                state   <= stNib1;
+                state   <= stR;
                 tx_data <= i_tx_data;
              end
+			stR:
+				if (~tfifo_full) state <= stN;
+			stN:
+				if (~tfifo_full) state <= stC;
+			stC:
+				if (~tfifo_full) state <= stNib1;
          stCR:
            if (~tfifo_full) state <= stIdle;
          default:
            if (~tfifo_full)
              begin
                 state   <= state + 1;
-                tx_data <= {tx_data,4'b0000};
-             end
+					 tx_data <= {tx_data,4'b0000};
+				 end
        endcase // case (state)
 
    function [7:0] fnNib2ASCII;
@@ -90,6 +100,15 @@ module uart_top (/*AUTOARG*/
      case (state)
        stNL:    tfifo_in = "\n";
        stCR:    tfifo_in = "\r";
+		 stR:		 tfifo_in = "R";
+		 stN:
+			case (i_tx_reg)
+				2'b00: tfifo_in = "0";
+				2'b01: tfifo_in = "1";
+				2'b10: tfifo_in = "2";
+				2'b11: tfifo_in = "3";
+			endcase
+		 stC:		 tfifo_in = ":"; 
        default: tfifo_in = fnNib2ASCII(tx_data[seq_dp_width-1:seq_dp_width-4]);
      endcase // case (state)
    
