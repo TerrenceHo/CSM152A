@@ -16,30 +16,49 @@ module tb;
    wire [7:0]           led;                    // From uut_ of nexys3.v
    // End of automatics
 
-   initial
-     begin
-        //$shm_open  ("dump", , ,1);
-        //$shm_probe (tb, "ASTF");
-
-        clk = 0;
-        btnR = 1;
-        btnS = 0;
-        #1000 btnR = 0;
-        #1500000;
-        
-        tskRunPUSH(0,4);
-        tskRunPUSH(0,0);
-        tskRunPUSH(1,3);
-        tskRunMULT(0,1,2);
-        tskRunADD(2,0,3);
-        tskRunSEND(0);
-        tskRunSEND(1);
-        tskRunSEND(2);
-        tskRunSEND(3);
-        
-        #1000;        
-        $finish;
-     end
+//   initial
+//     begin
+//        //$shm_open  ("dump", , ,1);
+//        //$shm_probe (tb, "ASTF");
+//
+//        clk = 0;
+//        btnR = 1;
+//        btnS = 0;
+//        #1000 btnR = 0;
+//        #1500000;
+//        
+//        tskRunPUSH(0,4);
+//        tskRunPUSH(0,0);
+//        tskRunPUSH(1,3);
+//        tskRunMULT(0,1,2);
+//        tskRunADD(2,0,3);
+//        tskRunSEND(0);
+//        tskRunSEND(1);
+//        tskRunSEND(2);
+//        tskRunSEND(3);
+//        
+//        #1000;        
+//        $finish;
+//     end
+	reg[7:0] read_input[1023:0]; // declare input register
+   initial 
+		begin
+			clk = 0;
+			btnR = 1;
+			btnS = 0;
+			#1000 btnR = 0;
+			#1500000;
+			
+			$readmemb("seq.code", read_input);
+			
+			for(i = 1; i < read_input[0] + 1; i = i + 1) 
+				begin
+					tskRunInst(read_input[i]);
+				end
+			
+			#1000;
+			$finish;
+		end
 
    always #5 clk = ~clk;
    
