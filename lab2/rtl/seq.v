@@ -59,10 +59,10 @@ module seq (/*AUTOARG*/
 //	assign inst_op_mult = (inst_op == seq_op_mult);
 //   assign inst_op_send = (inst_op == seq_op_send);
 
-   assign inst_op_push = (inst_op == seq_op_push);// && i_inst_send == 1'b0);
-   assign inst_op_add  = (inst_op == seq_op_add);// && i_inst_send == 1'b0);
-	assign inst_op_mult = (inst_op == seq_op_mult);// && i_inst_send == 1'b0);
-   assign inst_op_send = (inst_op == seq_op_send);// || i_inst_send == 1'b1);
+   assign inst_op_push = (inst_op == seq_op_push && i_inst_send == 1'b0);
+   assign inst_op_add  = (inst_op == seq_op_add && i_inst_send == 1'b0);
+	assign inst_op_mult = (inst_op == seq_op_mult && i_inst_send == 1'b0);
+   assign inst_op_send = (inst_op == seq_op_send || i_inst_send == 1'b1);
 
 
    // ===========================================================================

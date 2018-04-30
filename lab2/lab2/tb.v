@@ -6,7 +6,7 @@ module tb;
    reg       clk;
    reg       btnS;
    reg       btnR;
-   
+   reg		 btn1;
    integer   i;
    
    /*AUTOWIRE*/
@@ -46,6 +46,7 @@ module tb;
 			clk = 0;
 			btnR = 1;
 			btnS = 0;
+			btn1 = 0;
 			#1000 btnR = 0;
 			#1500000;
 			
@@ -81,6 +82,7 @@ module tb;
                 .sw                     (sw[7:0]),
                 .btnS                   (btnS),
                 .btnR                   (btnR),
+					 .btn1						 (btn1),
                 .clk                    (clk));
 
    task tskRunInst;
