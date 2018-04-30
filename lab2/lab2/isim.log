@@ -1,5 +1,5 @@
 ISim log file
-Running: /home/ise/SharedFolderVM/CSM152A/lab2/lab2/tb_isim_beh.exe -intstyle ise -gui -tclbatch isim.cmd -wdb /home/ise/SharedFolderVM/CSM152A/lab2/lab2/tb_isim_beh.wdb 
+Running: /home/ise/SharedFolderVM/CSM152A/lab2/lab2/tb_isim_beh.exe -intstyle ise -gui -tclbatch isim.cmd -wdb /home/ise/SharedFolderVM/CSM152A/lab2/lab2/model_uart_isim_beh.wdb 
 ISim P.20160913 (signature 0xfbc00daa)
 ----------------------------------------------------------------------
 WARNING:Security:42 - Your software subscription period has lapsed. Your current version of Xilinx tools will continue to function, but you no longer qualify for Xilinx software updates or new releases.
@@ -103,4 +103,3 @@ Finished circuit initialization process.
  117965845 ... led output changed to        00011010
  118051515 UART0 Received byte 52313a30303232 (R1:0022)
 Stopped at time : 118502 us : File "/home/ise/SharedFolderVM/CSM152A/lab2/lab2/tb.v" Line 60
-# exit 0

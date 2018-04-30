@@ -2,7 +2,7 @@ module seq (/*AUTOARG*/
    // Outputs
    o_tx_data, o_tx_valid,
    // Inputs
-   i_tx_busy, i_inst, i_inst_valid, clk, rst
+   i_tx_busy, i_inst, i_inst_valid, clk, rst, i_inst_send,
    );
 
 `include "seq_definitions.v"
@@ -15,7 +15,7 @@ module seq (/*AUTOARG*/
    // Instruction interface
    input [seq_in_width-1:0]  i_inst;
    input                     i_inst_valid;
-//	input						     i_inst_send;
+	input						     i_inst_send;
 
    input                     clk;
    input                     rst;
@@ -54,10 +54,16 @@ module seq (/*AUTOARG*/
    assign inst_rb    = i_inst[seq_rn_width*2-1:seq_rn_width*1];
    assign inst_ra    = i_inst[seq_rn_width*3-1:seq_rn_width*2];
 
-   assign inst_op_push = (inst_op == seq_op_push);
-   assign inst_op_add  = (inst_op == seq_op_add);
-	assign inst_op_mult = (inst_op == seq_op_mult);
-   assign inst_op_send = (inst_op == seq_op_send);
+//   assign inst_op_push = (inst_op == seq_op_push);
+//   assign inst_op_add  = (inst_op == seq_op_add);
+//	assign inst_op_mult = (inst_op == seq_op_mult);
+//   assign inst_op_send = (inst_op == seq_op_send);
+
+   assign inst_op_push = (inst_op == seq_op_push);// && i_inst_send == 1'b0);
+   assign inst_op_add  = (inst_op == seq_op_add);// && i_inst_send == 1'b0);
+	assign inst_op_mult = (inst_op == seq_op_mult);// && i_inst_send == 1'b0);
+   assign inst_op_send = (inst_op == seq_op_send);// || i_inst_send == 1'b1);
+
 
    // ===========================================================================
    // Register File

@@ -40,7 +40,7 @@ module nexys3 (/*AUTOARG*/
    reg         clk_en_d;
       
    reg [7:0]   inst_wd;
-//	reg			inst_send;
+	reg			inst_send;
    reg         inst_vld;
    reg [2:0]   step_d;
 	reg [2:0] 	step_e;
@@ -92,13 +92,10 @@ module nexys3 (/*AUTOARG*/
 			 step_e[2:0]  <= 0;
        end
      else if (clk_en) // Down sampling
-       begin
-          step_d[2:0]  <= {btnS, step_d[2:1]};
+       begin          
+			 step_d[2:0]  <= {btnS, step_d[2:1]};
+			 inst_wd[7:0] <= sw[7:0];
 			 step_e[2:0]  <= {btn1, step_e[2:1]};
-			 if (~step_e[0] & step_e[1])
-				inst_wd <= {2'b11, sw[5:0]};
-			 else
-				inst_wd[7:0] <= sw[7:0];
        end
 	   
 		
@@ -125,9 +122,13 @@ module nexys3 (/*AUTOARG*/
      else if (clk_en_d)
 	  begin
        inst_vld <= is_btnS_posedge | is_btn1_posedge;
+		 inst_send <= is_btn1_posedge;
 	  end
 	  else
+		begin
 	    inst_vld <= 0;
+		 inst_send <= 0;
+		end
 
    always @ (posedge clk)
      if (rst)
@@ -148,7 +149,7 @@ module nexys3 (/*AUTOARG*/
              .i_tx_busy                 (uart_tx_busy),
              .i_inst                    (inst_wd[seq_in_width-1:0]),
              .i_inst_valid              (inst_vld),
-//				 .i_inst_send					 (inst_send),
+				 .i_inst_send					 (inst_send),
              /*AUTOINST*/
              // Inputs
              .clk                       (clk),
