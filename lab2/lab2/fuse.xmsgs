@@ -5,13 +5,13 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="warning" file="HDLCompiler" num="370" delta="unknown" >"/home/ise/Xilinx_host/CSM152A/lab2/lab2/../rtl/seq.v" Line 6: Empty port in module declaration
+<msg type="warning" file="HDLCompiler" num="370" delta="unknown" >"/home/ise/SharedFolderVM/CSM152A/lab2/lab2/../rtl/seq.v" Line 6: Empty port in module declaration
 </msg>
 
-<msg type="warning" file="HDLCompiler" num="1016" delta="unknown" >"/home/ise/Xilinx_host/CSM152A/lab2/lab2/../rtl/nexys3.v" Line 145: Port <arg fmt="%s" index="1">number 9</arg> is not connected to this instance
+<msg type="warning" file="HDLCompiler" num="1016" delta="unknown" >"/home/ise/SharedFolderVM/CSM152A/lab2/lab2/../rtl/nexys3.v" Line 145: Port <arg fmt="%s" index="1">number 9</arg> is not connected to this instance
 </msg>
 
-<msg type="warning" file="HDLCompiler" num="329" delta="unknown" >"/home/ise/Xilinx_host/CSM152A/lab2/lab2/../rtl/seq.v" Line 116: Target &lt;<arg fmt="%s" index="1">(null)</arg>&gt; of concurrent assignment or output port connection should be a net type.
+<msg type="warning" file="HDLCompiler" num="329" delta="unknown" >"/home/ise/SharedFolderVM/CSM152A/lab2/lab2/../rtl/seq.v" Line 116: Target &lt;<arg fmt="%s" index="1">(null)</arg>&gt; of concurrent assignment or output port connection should be a net type.
 </msg>
 
 </messages>
