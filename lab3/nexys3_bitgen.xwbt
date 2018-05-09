@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=C:\.Xilinx\lab3_ats\nexys3.ncd
+OUTFILE=C:\.Xilinx\lab3_ats\nexys3.bit
+FAMILY=Spartan6
+PART=xc6slx16-3csg324
+WORKINGDIR=C:\.Xilinx\lab3_ats
+LICENSE=ISE
+USER_INFO=203015155_203016297_210565169_761
