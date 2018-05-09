@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <ImplementationReportsDirectory>/home/ise/Xilinx_host/CSM152A/lab2/lab2</ImplementationReportsDirectory>
+  <ImplementationReportsDirectory>/home/ise/M152A/CSM152A/lab2/lab2/</ImplementationReportsDirectory>
   <ModuleName>nexys3</ModuleName>
-  <DateModified>2018-05-08T23:35:57</DateModified>
-  <SavedFilePath>/home/ise/Xilinx_host/CSM152A/lab2/lab2/iseconfig/nexys3.xreport</SavedFilePath>
+  <DateModified>2018-05-09T16:10:13</DateModified>
+  <SavedFilePath>/home/ise/M152A/CSM152A/lab2/lab2/iseconfig/nexys3.xreport</SavedFilePath>
   <DateInitialized>2018-05-08T23:35:57</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>
