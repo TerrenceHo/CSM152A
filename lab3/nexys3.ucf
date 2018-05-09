@@ -220,7 +220,6 @@ NET "btnR"         LOC = "D9"  | IOSTANDARD = "LVCMOS33";   #Bank = 0, Pin name 
 #NET "RsRx"           LOC = "N17" | IOSTANDARD = "LVCMOS33";   #Bank = 1, Pin name = IO_L48P_HDC_M1DQ8,                 Sch name = MCU-RX
 #NET "RsTx"           LOC = "N18" | IOSTANDARD = "LVCMOS33";   #Bank = 1, Pin name = IO_L48N_M1DQ9,                     Sch name = MCU-TX
 
-
 ## VHDCI Connector
 #NET "EXP-IO_P<0>"    LOC = "B2"  | IOSTANDARD = "LVCMOS33";   #Bank = 0, Pin name = IO_L2P,                            Sch name = EXP_IO1_P
 #NET "EXP-IO_N<0>"    LOC = "A2"  | IOSTANDARD = "LVCMOS33";   #Bank = 0, Pin name = IO_L2N,                            Sch name = EXP_IO1_N

@@ -116,5 +116,35 @@ module nexys3(
 			inst_cnt <= inst_cnt + 1;
 			
 	assign led[7:0] = inst_cnt[7:0];
+	
+	reg [3:0] counter1;
+	reg [2:0] counter2;
+	reg [3:0] counter3;
+	reg [2:0] counter4;
+	
+	counter counter_ (
+		// inputs
+		.clk(clk),
+		.rst(rst),
+		
+		// outputs
+		.cur1stCnt(counter1),
+		.cur2stCnt(counter2),
+		.cur3stCnt(counter3),
+		.cur4stCnt(counter4),
+	);
+	
+	reg clk1Hz;
+	reg clk400Hz;
+	reg clk1ishHz;
+	clock clock_ (
+		// inputs
+		.clk(clk),
+		.rst(rst),
+		// outputs
+		.clk1Hz(clk1Hz),
+		.clk400Hz(clk400Hz),
+		.clk1ishHz(clk1ishHz),
+	);
 
 endmodule
