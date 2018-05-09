@@ -49,6 +49,21 @@ module nexys3(
 
 	reg [7:0] inst_cnt;
 	
+	wire [3:0] counter1;
+	wire [2:0] counter2;
+	wire [3:0] counter3;
+	wire [2:0] counter4;
+	
+	wire clk1Hz;
+	wire clk2Hz;
+	wire clk400Hz;
+	wire clk1ishHz;
+		
+	wire [7:0] segs_second0;
+	wire [7:0] segs_second1;
+	wire [7:0] segs_minute0;
+	wire [7:0] segs_minute1;
+	
 	/////////////////
 	// Async Reset //
 	/////////////////
@@ -91,8 +106,8 @@ module nexys3(
 			end
 		else if (clk_en)
 			begin
-				step_d[2:0] <= {btnS, step_d[2:1]};
 				inst_wd[7:0] <= sw[7:0];
+				step_d[2:0] <= {btnS, step_d[2:1]};
 			end
 	
 	wire is_btnS_posedge;
@@ -117,40 +132,28 @@ module nexys3(
 			
 	assign led[7:0] = inst_cnt[7:0];
 	
-	reg [3:0] counter1;
-	reg [2:0] counter2;
-	reg [3:0] counter3;
-	reg [2:0] counter4;
-	
 	counter counter_ (
 		// inputs
-		.clk(clk),
-		.rst(rst),
+		.clk(clk), .rst(rst),
 		
 		// outputs
-		.cur1stCnt(counter1),
-		.cur2stCnt(counter2),
-		.cur3stCnt(counter3),
-		.cur4stCnt(counter4),
+		.cur1stCnt_W(counter1), .cur2ndCnt_W(counter2), 
+		.cur3rdCnt_W(counter3), .cur4thCnt_W(counter4)
 	);
-	
-	reg clk1Hz;
-	reg clk400Hz;
-	reg clk1ishHz;
+
 	clock clock_ (
 		// inputs
-		.clk(clk),
-		.rst(rst),
+		.clk(clk), .rst(rst),
 		// outputs
-		.clk1Hz(clk1Hz),
-		.clk400Hz(clk400Hz),
-		.clk1ishHz(clk1ishHz),
+		.clk1Hz_W(clk1Hz), .clk2Hz_W(clk2Hz),
+		.clk400Hz_W(clk400Hz), .clk1ishHz_W(clk1ishHz)
 	);
+
+	display_single display_1 (.digit(counter1), .segs(segs_second0));
+	display_single display_2 (.digit(counter2), .segs(segs_second1));
+	display_single display_3 (.digit(counter3), .segs(segs_minute0));
+	display_single display_4 (.digit(counter4), .segs(segs_minute1));
 	
-	wire [7:0] segs_second0;
-	wire [7:0] segs_second1;
-	wire [7:0] segs_minute0;
-	wire [7:0] segs_minute1;
-	display display_1 (.digit(counter1), .segs(segs_second0));
+	
 
 endmodule

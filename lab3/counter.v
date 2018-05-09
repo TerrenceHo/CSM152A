@@ -19,9 +19,14 @@
 //
 /////////// ///////////////////////////////////////////////////////////////////////
 module counter(input clk, input rst,
-	output reg [3:0] cur1stCnt, output reg [2:0] cur2ndCnt, 
-	output reg [3:0] cur3rdCnt, output reg [2:0] cur4thCnt
+	output wire [3:0] cur1stCnt_W, output wire [2:0] cur2ndCnt_W, 
+	output wire [3:0] cur3rdCnt_W, output wire [2:0] cur4thCnt_W
     );
+
+reg [3:0] cur1stCnt;
+reg [2:0] cur2ndCnt;
+reg [3:0] cur3rdCnt;
+reg [2:0] cur4thCnt;
 
 always @(posedge clk)
 begin
@@ -52,5 +57,10 @@ end
 else if (cur1stCnt < 4'b1001)
 	cur1stCnt <= cur1stCnt + 1'b1;
 end
+
+assign cur1stCnt_W = cur1stCnt;
+assign cur2ndCnt_W = cur2ndCnt;
+assign cur3rdCnt_W = cur3rdCnt;
+assign cur4thCnt_W = cur4thCnt;
 
 endmodule

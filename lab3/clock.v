@@ -18,14 +18,19 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module clock(input clk, input rst, output reg clk2Hz, 
-	output reg clk1Hz, output reg clk400Hz, output reg clk1ishHz
+module clock(input clk, input rst, output wire clk2Hz_W, 
+	output wire clk1Hz_W, output wire clk400Hz_W, output wire clk1ishHz_W
     );
 
 reg [31:0] count1;
 reg [31:0] count2;
 reg [31:0] count3;
 reg [31:0] count4;
+
+reg clk1Hz;
+reg clk2Hz;
+reg clk400Hz;
+reg clk1ishHz;
 
 always @ (posedge(clk), posedge(rst))
 begin
@@ -123,5 +128,9 @@ end
 //	count4 <= count4 + 1;
 //end
 
+assign clk1Hz_W = clk1Hz;
+assign clk2Hz_W = clk2Hz;
+assign clk400Hz_W = clk400Hz;
+assign clk1ishHz_W = clk1ishHz;
 
 endmodule

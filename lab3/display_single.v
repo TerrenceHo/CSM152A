@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module display(
+module display_single(
 		// input
 		digit, 
 
@@ -44,6 +44,7 @@ module display(
 			4'b1001: temp_segments = 8'b10010000;
 			default: temp_segments = 8'b11111111;
 		endcase
-
+	end
+	
 	assign segs = temp_segments;
 endmodule
