@@ -1,1 +1,1 @@
--intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -lib "secureip" -o "C:/Users/152/Desktop/lab3/clocktb_isim_beh.exe" -prj "C:/Users/152/Desktop/lab3/clocktb_beh.prj" "work.clocktb" "work.glbl" 
+-intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -lib "secureip" -o "/home/ise/Xilinx_host/CSM152A/lab3/clocktb_isim_beh.exe" -prj "/home/ise/Xilinx_host/CSM152A/lab3/clocktb_beh.prj" "work.clocktb" "work.glbl" 

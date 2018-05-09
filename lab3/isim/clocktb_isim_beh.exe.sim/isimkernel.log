@@ -2,27 +2,9 @@ Command line:
    clocktb_isim_beh.exe
      -simmode  gui
      -simrunnum  0
-     -socket  49956
+     -socket  58094
 
-Mon May 07 12:05:26 2018
+Wed May  9 00:30:09 2018
 
 
- Elaboration Time: 0.0624 sec
-
- Current Memory Usage: 825.102 Meg
-
- Total Signals          : 19
- Total Nets             : 19
- Total Signal Drivers   : 11
- Total Blocks           : 3
- Total Primitive Blocks : 2
- Total Processes        : 18
- Total Traceable Variables  : 28
- Total Scalar Nets and Variables : 233
-
- Total Simulation Time: 76.0505 sec
-
- Current Memory Usage: 825.102 Meg
-
-Mon May 07 12:08:21 2018
-
+ Elaboration Time: 0.04 sec

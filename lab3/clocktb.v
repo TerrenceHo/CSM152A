@@ -54,6 +54,6 @@ module clocktb;
 		// Add stimulus here
 
 	end
-   always #10 clk = ~clk;  
+   always #5 clk = ~clk;  
 endmodule
 
