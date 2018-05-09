@@ -146,5 +146,11 @@ module nexys3(
 		.clk400Hz(clk400Hz),
 		.clk1ishHz(clk1ishHz),
 	);
+	
+	wire [7:0] segs_second0;
+	wire [7:0] segs_second1;
+	wire [7:0] segs_minute0;
+	wire [7:0] segs_minute1;
+	display display_1 (.digit(counter1), .segs(segs_second0));
 
 endmodule
