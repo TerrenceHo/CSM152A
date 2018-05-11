@@ -20,16 +20,18 @@
 //////////////////////////////////////////////////////////////////////////////////
 module nexys3(
 	// Outputs
-	led,
+	led, seg, an,
 	
 	// inputs
-	sw, btnS, btnR, clk,
+	sw, btnS, btnR, clk
     );
 	// Automatic Input/Output
 	input [7:0] sw;
-	inout btnS;
+	input btnS;
 	input btnR;
 	input clk;
+	input [7:0] seg;
+	input [3:0] an;
 
 	output [7:0] led;
 	
@@ -63,6 +65,7 @@ module nexys3(
 	wire [7:0] segs_second1;
 	wire [7:0] segs_minute0;
 	wire [7:0] segs_minute1;
+	wire [7:0] blank_digit;
 	
 	/////////////////
 	// Async Reset //
@@ -111,7 +114,7 @@ module nexys3(
 			end
 	
 	wire is_btnS_posedge;
-	assign is_btnS_postedge = ~step_d[0] & step_d[1];
+	assign is_btnS_posedge = ~step_d[0] & step_d[1];
 	always @ (posedge clk)
 		if(rst)
 			inst_pause <= 1'b0;
@@ -132,6 +135,8 @@ module nexys3(
 			
 	assign led[7:0] = inst_cnt[7:0];
 	
+	// Modules
+	
 	counter counter_ (
 		// inputs
 		.clk(clk), .rst(rst),
@@ -148,12 +153,29 @@ module nexys3(
 		.clk1Hz_W(clk1Hz), .clk2Hz_W(clk2Hz),
 		.clk400Hz_W(clk400Hz), .clk1ishHz_W(clk1ishHz)
 	);
-
-	display_single display_1 (.digit(counter1), .segs(segs_second0));
-	display_single display_2 (.digit(counter2), .segs(segs_second1));
-	display_single display_3 (.digit(counter3), .segs(segs_minute0));
-	display_single display_4 (.digit(counter4), .segs(segs_minute1));
+	
+//	display_single display_1 (.digit(counter1), .segs(segs_second0));	
+//	display_single display_2 (.digit(counter2), .segs(segs_second1));
+//	display_single display_3 (.digit(counter3), .segs(segs_minute0));
+//	display_single display_4 (.digit(counter4), .segs(segs_minute1));
+//	display_single display_blank (.digit(4'b1111), .segs(blank_digit));
 	
 	
-
+	wire [7:0] temp_seg;
+	wire [3:0] temp_an;
+	Display display_ (
+		// inputs
+		.sec0(counter1),
+		.sec1(counter2),
+		.min0(counter3),
+		.min1(counter4),
+		
+		.faster_clk(clk400Hz),
+		.refresh_clk(clk1ishHz),
+		
+		// outputs
+		.seg(temp_seg),
+		.an(temp_an)
+	);
+	
 endmodule

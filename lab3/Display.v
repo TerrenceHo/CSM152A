@@ -18,15 +18,19 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module Display(mins, secs, seg, an, blink_clk, faster_clk, refresh_clk);
+module Display(min0, min1, sec0, sec1, blink_clk, faster_clk, refresh_clk, seg, an);
 
-	input[5:0] mins;
-	input[5:0] secs;
+	input[3:0] sec0;
+	input[2:0] sec1;
+	input[3:0] min0;
+	input[2:0] min1;
+
 	input faster_clk;
 	input blink_clk;
+	input refresh_clk;
 
-	wire[3:0] an;
-	wire[7:0] seg;
+	output [3:0] an;
+	output [7:0] seg;
 	
 	wire[3:0] mins_tens;
 	wire[3:0] mins_ones;
@@ -34,77 +38,82 @@ module Display(mins, secs, seg, an, blink_clk, faster_clk, refresh_clk);
 	wire[3:0] secs_ones;
 	
 	reg[3:0] current_digit;
-	reg[1:0] counter;
+	reg[1:0] counter = 0;
 	reg[3:0] an_temp;
+	reg[7:0] seg_temp;
 	
-	assign mins_tens = mins/10;
-	assign mins_ones = mins%10;
-	assign secs_tens = secs/10;
-	assign secs_ones = secs%10;
+//	assign mins_tens = mins/10;
+//	assign mins_ones = mins%10;
+//	assign secs_tens = secs/10;
+//	assign secs_ones = secs%10;
 	
-	assign counter = 2'b11; //so that it gets resetted at the start
-	always @ (posedge refresh_clk) begin
+//	always @ (posedge refresh_clk) begin
 	//reset if already at the end
-		if(counter == 2'b11) begin
-			counter = 2'b00;
-		end
-		else begin
-			counter = counter + 1;
-		end
-	end
+//		if(counter == 2'b11) 
+//			counter = 2'b00;
+//		else begin
+//			counter = counter + 1;
+//		end
+//	end
 	
 	always @ (posedge faster_clk) begin
+		
 		case(counter)
 			2'b00:
 				begin
-					current_digit = secs_ones;
-					an = 4'b0001;
+					current_digit <= sec0;
+					an_temp <= 4'b0111;
+					counter <= counter + 1;
 				end
 			2'b01:
 				begin
-					current_digit = secs_tens;
-					an = 4'b0010;
+					current_digit <= sec1;
+					an_temp <= 4'b1011;
+					counter <= counter + 1;
 				end
 			2'b10:
 				begin
-					current_digit = mins_ones;
-					an = 4'b0100;
+					current_digit <= min0;
+					an_temp <= 4'b1101;
+					counter <= counter + 1;
 				end
 			2'b11:
 				begin
-					current_digit = mins_tens;
-					an = 4'b1000;
+					current_digit <= min1;
+					an_temp <= 4'b1110;
+					counter <= counter + 1;
 				end
 		endcase
 		
+		
+		
 		case(current_digit)
-			0: seg = 7'b0000001;
-			1: seg = 7'b1001111;
-			2: seg = 7'b0010010;
-			3: seg = 7'b0000110;
-			4: seg = 7'b1001100;
-			5: seg = 7'b0100100;
-			6: seg = 7'b0100000;
-			7: seg = 7'b0001111;
-			8: seg = 7'b0000000;
-			9: seg = 7'b0001100;
-        default: seg = 7'b1001000;
+//			0: seg_temp = 7'b0000001;
+//			1: seg_temp = 7'b1001111;
+//			2: seg_temp = 7'b0010010;
+//			3: seg_temp = 7'b0000110;
+//			4: seg_temp = 7'b1001100;
+//			5: seg_temp = 7'b0100100;
+//			6: seg_temp = 7'b0100000;
+//			7: seg_temp = 7'b0001111;
+//			8: seg_temp = 7'b0000000;
+//			9: seg_temp = 7'b0001100;
+//        default: seg_temp = 7'b1001000;
+
+			4'b0000: seg_temp = 8'b11000000;
+			4'b0001: seg_temp = 8'b11111001;
+			4'b0010: seg_temp = 8'b10100100;
+			4'b0011: seg_temp = 8'b10110000;
+			4'b0100: seg_temp = 8'b10011001;
+			4'b0101: seg_temp = 8'b10010010;
+			4'b0110: seg_temp = 8'b10000010;
+			4'b0111: seg_temp = 8'b11111000;
+			4'b1000: seg_temp = 8'b10000000;
+			4'b1001: seg_temp = 8'b10010000;
+			default: seg_temp = 8'b11111111;
 		endcase
 	end
-endmodule
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
+	assign seg = seg_temp;
+	assign an = an_temp;
 endmodule
