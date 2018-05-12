@@ -146,12 +146,14 @@ module nexys3(
 		else if (inst_pause)
 			inst_cnt <= inst_cnt + 1;
 			
-	// Modules
+	///////////////////
+	///// Modules /////
+	///////////////////
 	
 	counter counter_ (
 		// inputs
 		.clk(clk1Hz), .rst(rst), .send(inst_pause), .pause(is_paused),
-		.num(num), .sel(sel),
+		.num(num), .sel(sel), .adj(adj),
 		
 		// outputs
 		.cur1stCnt_W(counter1), .cur2ndCnt_W(counter2), 
@@ -165,13 +167,6 @@ module nexys3(
 		.clk1Hz_W(clk1Hz), .clk2Hz_W(clk2Hz),
 		.clk400Hz_W(clk400Hz), .clk1ishHz_W(clk1ishHz)
 	);
-	
-//	display_single display_1 (.digit(counter1), .segs(segs_second0));	
-//	display_single display_2 (.digit(counter2), .segs(segs_second1));
-//	display_single display_3 (.digit(counter3), .segs(segs_minute0));
-//	display_single display_4 (.digit(counter4), .segs(segs_minute1));
-//	display_single display_blank (.digit(4'b1111), .segs(blank_digit));
-	
 	
 	wire [7:0] temp_seg;
 	wire [3:0] temp_an;
@@ -190,11 +185,6 @@ module nexys3(
 		.an(temp_an)
 	);
 	
-//	always @ (posedge clk) 
-//		begin
-//			seg <= 8'b00000000;
-//			an <= 4'b0111;
-//		end
 	assign seg[7:0] = temp_seg;
 	assign an[3:0] = temp_an;
 	assign led[7:0] = inst_cnt[7:0];
