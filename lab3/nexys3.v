@@ -23,14 +23,16 @@ module nexys3(
 	led, seg, an,
 	
 	// inputs
-	sw, btnS, btnR, clk
+	sel, adj, num, btnS, btnR, clk
     );
 	// Automatic Input/Output
-	input [7:0] sw;
+	input [1:0] sel;
+	input adj;
+	input [3:0] num;
 	input btnS;
 	input btnR;
 	input clk;
-	
+	 
 	output [7:0] seg;
 	output [3:0] an;
 	output [7:0] led;
@@ -47,7 +49,7 @@ module nexys3(
 
 	reg [7:0] inst_wd;
 	reg inst_pause;
-	reg is_paused;
+	reg is_paused = 0;
 	reg [2:0] step_d;
 
 	reg [7:0] inst_cnt;
@@ -105,18 +107,15 @@ module nexys3(
 	always @ (posedge clk) 
 		if (rst)
 			begin
-				inst_wd[7:0] <= 0;
 				step_d[2:0] <= 0;
 			end
 		else if (clk_en)
 			begin
-				inst_wd[7:0] <= sw[7:0];
 				step_d[2:0] <= {btnS, step_d[2:1]};
 			end
 	
 	wire is_btnS_posedge;
 	assign is_btnS_posedge = ~step_d[0] & step_d[1];
-	assign is_adj = inst_wd[2];
 	always @ (posedge clk)
 		if(rst)
 			inst_pause <= 1'b0;
@@ -125,20 +124,18 @@ module nexys3(
 		else
 			inst_pause <= 0;
 			
+	//////////////////////
+	///// Pause Reg //////
+	//////////////////////
 	always @ (posedge clk)
 		if (rst) 
 			is_paused <= 1'b0;
-		else if (clk_en_d && (is_btnS_posedge == 1))
+		else if (clk_en_d && (is_btnS_posedge == 1) && adj == 0)
 			if (is_paused == 1'b1)
 				is_paused <= 1'b0;
 			else
 				is_paused <= 1'b1;
-//		else if (clk_en_d && (is_adj == 1))
-//			is_paused <= 1'b1;
-//		else if (clk_en_d && (is_adj == 0))
-//			is_paused <= 1'b0;
 			
-
 	/////////////////////////////////////////		
 	////////// Instruction Counter //////////
 	/////////////////////////////////////////
@@ -153,7 +150,8 @@ module nexys3(
 	
 	counter counter_ (
 		// inputs
-		.clk(clk1Hz), .rst(rst), .pause(is_paused),
+		.clk(clk1Hz), .rst(rst), .send(inst_pause), .pause(is_paused),
+		.num(num), .sel(sel),
 		
 		// outputs
 		.cur1stCnt_W(counter1), .cur2ndCnt_W(counter2), 
