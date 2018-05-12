@@ -20,17 +20,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 module nexys3(
 	// Outputs
-	led,
+	led, seg, an,
 	
 	// inputs
-	sw, btnS, btnR, clk,
+	sw, btnS, btnR, clk
     );
 	// Automatic Input/Output
 	input [7:0] sw;
 	input btnS;
 	input btnR;
 	input clk;
-
+	
+	output [7:0] seg;
+	output [3:0] an;
 	output [7:0] led;
 	
 	// Custom variables
@@ -45,6 +47,7 @@ module nexys3(
 
 	reg [7:0] inst_wd;
 	reg inst_pause;
+	reg is_paused;
 	reg [2:0] step_d;
 
 	reg [7:0] inst_cnt;
@@ -59,10 +62,11 @@ module nexys3(
 	wire clk400Hz;
 	wire clk1ishHz;
 		
-	wire [7:0] segs_second0;
-	wire [7:0] segs_second1;
-	wire [7:0] segs_minute0;
-	wire [7:0] segs_minute1;
+//	wire [7:0] segs_second0;
+//	wire [7:0] segs_second1;
+//	wire [7:0] segs_minute0;
+//	wire [7:0] segs_minute1;
+//	wire [7:0] blank_digit;
 	
 	/////////////////
 	// Async Reset //
@@ -111,7 +115,8 @@ module nexys3(
 			end
 	
 	wire is_btnS_posedge;
-	assign is_btnS_postedge = ~step_d[0] & step_d[1];
+	assign is_btnS_posedge = ~step_d[0] & step_d[1];
+	assign is_adj = inst_wd[2];
 	always @ (posedge clk)
 		if(rst)
 			inst_pause <= 1'b0;
@@ -119,6 +124,20 @@ module nexys3(
 			inst_pause <= is_btnS_posedge;
 		else
 			inst_pause <= 0;
+			
+	always @ (posedge clk)
+		if (rst) 
+			is_paused <= 1'b0;
+		else if (clk_en_d && (is_btnS_posedge == 1))
+			if (is_paused == 1'b1)
+				is_paused <= 1'b0;
+			else
+				is_paused <= 1'b1;
+//		else if (clk_en_d && (is_adj == 1))
+//			is_paused <= 1'b1;
+//		else if (clk_en_d && (is_adj == 0))
+//			is_paused <= 1'b0;
+			
 
 	/////////////////////////////////////////		
 	////////// Instruction Counter //////////
@@ -130,11 +149,11 @@ module nexys3(
 		else if (inst_pause)
 			inst_cnt <= inst_cnt + 1;
 			
-	assign led[7:0] = inst_cnt[7:0];
+	// Modules
 	
 	counter counter_ (
 		// inputs
-		.clk(clk), .rst(rst),
+		.clk(clk1Hz), .rst(rst), .pause(is_paused),
 		
 		// outputs
 		.cur1stCnt_W(counter1), .cur2ndCnt_W(counter2), 
@@ -148,12 +167,37 @@ module nexys3(
 		.clk1Hz_W(clk1Hz), .clk2Hz_W(clk2Hz),
 		.clk400Hz_W(clk400Hz), .clk1ishHz_W(clk1ishHz)
 	);
-
-	display_single display_1 (.digit(counter1), .segs(segs_second0));
-	display_single display_2 (.digit(counter2), .segs(segs_second1));
-	display_single display_3 (.digit(counter3), .segs(segs_minute0));
-	display_single display_4 (.digit(counter4), .segs(segs_minute1));
+	
+//	display_single display_1 (.digit(counter1), .segs(segs_second0));	
+//	display_single display_2 (.digit(counter2), .segs(segs_second1));
+//	display_single display_3 (.digit(counter3), .segs(segs_minute0));
+//	display_single display_4 (.digit(counter4), .segs(segs_minute1));
+//	display_single display_blank (.digit(4'b1111), .segs(blank_digit));
 	
 	
-
+	wire [7:0] temp_seg;
+	wire [3:0] temp_an;
+	Display display_ (
+		// inputs
+		.sec0(counter1),
+		.sec1(counter2),
+		.min0(counter3),
+		.min1(counter4),
+		
+		.faster_clk(clk400Hz),
+		.refresh_clk(clk1ishHz),
+		
+		// outputs
+		.seg(temp_seg),
+		.an(temp_an)
+	);
+	
+//	always @ (posedge clk) 
+//		begin
+//			seg <= 8'b00000000;
+//			an <= 4'b0111;
+//		end
+	assign seg[7:0] = temp_seg;
+	assign an[3:0] = temp_an;
+	assign led[7:0] = inst_cnt[7:0];
 endmodule

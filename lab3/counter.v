@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 /////////// ///////////////////////////////////////////////////////////////////////
-module counter(input clk, input rst,
+module counter(input clk, input rst, input pause,
 	output wire [3:0] cur1stCnt_W, output wire [2:0] cur2ndCnt_W, 
 	output wire [3:0] cur3rdCnt_W, output wire [2:0] cur4thCnt_W
     );
@@ -37,7 +37,7 @@ begin
 	cur3rdCnt <= 4'b0000;
 	cur4thCnt <= 3'b000;
 end
-else if (cur1stCnt == 4'b1001)
+else if (cur1stCnt == 4'b1001 && pause != 1)
 begin
 	cur1stCnt <= 4'b0000;
 	cur2ndCnt <= cur2ndCnt + 1'b1;
@@ -54,7 +54,7 @@ begin
 		end
 	end
 end
-else if (cur1stCnt < 4'b1001)
+else if (cur1stCnt < 4'b1001 && pause != 1)
 	cur1stCnt <= cur1stCnt + 1'b1;
 end
 
