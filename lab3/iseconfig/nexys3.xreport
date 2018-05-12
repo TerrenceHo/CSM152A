@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2018-05-12T21:59:26</DateModified>
+  <DateModified>2018-05-12T22:05:20</DateModified>
   <ModuleName>nexys3</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
   <SavedFilePath>/home/ise/Xilinx_host/CSM152A/CSM152A/lab3/iseconfig/nexys3.xreport</SavedFilePath>
