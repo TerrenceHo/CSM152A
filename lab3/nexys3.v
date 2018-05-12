@@ -27,7 +27,7 @@ module nexys3(
     );
 	// Automatic Input/Output
 	input [7:0] sw;
-	inout btnS;
+	input btnS;
 	input btnR;
 	input clk;
 
