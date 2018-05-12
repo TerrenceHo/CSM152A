@@ -30,9 +30,9 @@ module nexys3(
 	input btnS;
 	input btnR;
 	input clk;
-	input [7:0] seg;
-	input [3:0] an;
-
+	
+	output [7:0] seg;
+	output [3:0] an;
 	output [7:0] led;
 	
 	// Custom variables
@@ -47,6 +47,7 @@ module nexys3(
 
 	reg [7:0] inst_wd;
 	reg inst_pause;
+	reg is_paused;
 	reg [2:0] step_d;
 
 	reg [7:0] inst_cnt;
@@ -61,11 +62,11 @@ module nexys3(
 	wire clk400Hz;
 	wire clk1ishHz;
 		
-	wire [7:0] segs_second0;
-	wire [7:0] segs_second1;
-	wire [7:0] segs_minute0;
-	wire [7:0] segs_minute1;
-	wire [7:0] blank_digit;
+//	wire [7:0] segs_second0;
+//	wire [7:0] segs_second1;
+//	wire [7:0] segs_minute0;
+//	wire [7:0] segs_minute1;
+//	wire [7:0] blank_digit;
 	
 	/////////////////
 	// Async Reset //
@@ -115,6 +116,7 @@ module nexys3(
 	
 	wire is_btnS_posedge;
 	assign is_btnS_posedge = ~step_d[0] & step_d[1];
+	assign is_adj = inst_wd[2];
 	always @ (posedge clk)
 		if(rst)
 			inst_pause <= 1'b0;
@@ -122,6 +124,20 @@ module nexys3(
 			inst_pause <= is_btnS_posedge;
 		else
 			inst_pause <= 0;
+			
+	always @ (posedge clk)
+		if (rst) 
+			is_paused <= 1'b0;
+		else if (clk_en_d && (is_btnS_posedge == 1))
+			if (is_paused == 1'b1)
+				is_paused <= 1'b0;
+			else
+				is_paused <= 1'b1;
+//		else if (clk_en_d && (is_adj == 1))
+//			is_paused <= 1'b1;
+//		else if (clk_en_d && (is_adj == 0))
+//			is_paused <= 1'b0;
+			
 
 	/////////////////////////////////////////		
 	////////// Instruction Counter //////////
@@ -133,13 +149,11 @@ module nexys3(
 		else if (inst_pause)
 			inst_cnt <= inst_cnt + 1;
 			
-	assign led[7:0] = inst_cnt[7:0];
-	
 	// Modules
 	
 	counter counter_ (
 		// inputs
-		.clk(clk), .rst(rst),
+		.clk(clk1Hz), .rst(rst), .pause(is_paused),
 		
 		// outputs
 		.cur1stCnt_W(counter1), .cur2ndCnt_W(counter2), 
@@ -178,4 +192,12 @@ module nexys3(
 		.an(temp_an)
 	);
 	
+//	always @ (posedge clk) 
+//		begin
+//			seg <= 8'b00000000;
+//			an <= 4'b0111;
+//		end
+	assign seg[7:0] = temp_seg;
+	assign an[3:0] = temp_an;
+	assign led[7:0] = inst_cnt[7:0];
 endmodule

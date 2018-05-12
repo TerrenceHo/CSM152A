@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2018-05-11T16:19:53</DateModified>
+  <DateModified>2018-05-11T10:23:06</DateModified>
   <ModuleName>nexys3</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>/home/ise/SharedFolderVM/CSM152A/lab3_ats/iseconfig/nexys3.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/home/ise/SharedFolderVM/CSM152A/lab3_ats/</ImplementationReportsDirectory>
+  <SavedFilePath>C:/Users/152/Desktop/CSM152A-master/CSM152A-master/lab3/iseconfig/nexys3.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>C:/Users/152/Desktop/CSM152A-master/CSM152A-master/lab3\</ImplementationReportsDirectory>
   <DateInitialized>2018-05-08T18:05:07</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

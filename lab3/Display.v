@@ -18,13 +18,17 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module Display(min0, min1, sec0, sec1, blink_clk, faster_clk, refresh_clk, seg, an);
+module Display(min0, min1, sec0, sec1, blink_clk, sel, pause, adj, 
+		faster_clk, refresh_clk, seg, an);
 
 	input[3:0] sec0;
 	input[2:0] sec1;
 	input[3:0] min0;
 	input[2:0] min1;
 
+	input [1:0] sel;
+	input pause;
+	input adj;
 	input faster_clk;
 	input blink_clk;
 	input refresh_clk;
@@ -42,6 +46,8 @@ module Display(min0, min1, sec0, sec1, blink_clk, faster_clk, refresh_clk, seg, 
 	reg[3:0] an_temp;
 	reg[7:0] seg_temp;
 	
+	reg[3:0] isDisplaying = 4'b0000;
+	
 //	assign mins_tens = mins/10;
 //	assign mins_ones = mins%10;
 //	assign secs_tens = secs/10;
@@ -55,6 +61,13 @@ module Display(min0, min1, sec0, sec1, blink_clk, faster_clk, refresh_clk, seg, 
 //			counter = counter + 1;
 //		end
 //	end
+
+	always @ (posedge blink_clk) begin
+		if (adj == 1'b1)
+			isDisplaying[1] = ~isDisplaying[1];
+		else
+			isDisplaying = 4'b0000;
+	end
 	
 	always @ (posedge faster_clk) begin
 		
@@ -68,7 +81,7 @@ module Display(min0, min1, sec0, sec1, blink_clk, faster_clk, refresh_clk, seg, 
 			2'b01:
 				begin
 					current_digit <= sec1;
-					an_temp <= 4'b1011;
+					an_temp <= 4'b1110;
 					counter <= counter + 1;
 				end
 			2'b10:
@@ -80,26 +93,12 @@ module Display(min0, min1, sec0, sec1, blink_clk, faster_clk, refresh_clk, seg, 
 			2'b11:
 				begin
 					current_digit <= min1;
-					an_temp <= 4'b1110;
+					an_temp <= 4'b1011;
 					counter <= counter + 1;
 				end
 		endcase
-		
-		
-		
+			
 		case(current_digit)
-//			0: seg_temp = 7'b0000001;
-//			1: seg_temp = 7'b1001111;
-//			2: seg_temp = 7'b0010010;
-//			3: seg_temp = 7'b0000110;
-//			4: seg_temp = 7'b1001100;
-//			5: seg_temp = 7'b0100100;
-//			6: seg_temp = 7'b0100000;
-//			7: seg_temp = 7'b0001111;
-//			8: seg_temp = 7'b0000000;
-//			9: seg_temp = 7'b0001100;
-//        default: seg_temp = 7'b1001000;
-
 			4'b0000: seg_temp = 8'b11000000;
 			4'b0001: seg_temp = 8'b11111001;
 			4'b0010: seg_temp = 8'b10100100;
@@ -112,6 +111,7 @@ module Display(min0, min1, sec0, sec1, blink_clk, faster_clk, refresh_clk, seg, 
 			4'b1001: seg_temp = 8'b10010000;
 			default: seg_temp = 8'b11111111;
 		endcase
+		
 	end
 		
 	assign seg = seg_temp;
