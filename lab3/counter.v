@@ -18,7 +18,8 @@
 // Additional Comments: 
 //
 /////////// ///////////////////////////////////////////////////////////////////////
-module counter(input clk, input rst, input pause, input [3:0] num, input [1:0] sel, input send,
+module counter(input clk, input rst, input pause, input [3:0] num, input [1:0] sel, 
+	input send, input adj,
 	output wire [3:0] cur1stCnt_W, output wire [2:0] cur2ndCnt_W, 
 	output wire [3:0] cur3rdCnt_W, output wire [2:0] cur4thCnt_W
     );
@@ -33,10 +34,10 @@ begin
 if (adj == 1'b1 && send == 1'b1)
 begin
 	case(sel)
-		0: cur1stCnt = num;
-		1: cur2ndCnt = num;
-		2: cur3rdCnt = num;
-		3: cur4thCnt = num;
+		0: cur1stCnt <= num;
+		1: cur2ndCnt <= num;
+		2: cur3rdCnt <= num;
+		3: cur4thCnt <= num;
 	endcase
 end
 if (adj == 1'b0 && pause == 1'b0)
