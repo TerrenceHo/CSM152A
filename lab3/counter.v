@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 /////////// ///////////////////////////////////////////////////////////////////////
-module counter(input clk, input rst, input pause,
+module counter(input clk, input rst, input pause, input [3:0] num, input [1:0] sel, input send,
 	output wire [3:0] cur1stCnt_W, output wire [2:0] cur2ndCnt_W, 
 	output wire [3:0] cur3rdCnt_W, output wire [2:0] cur4thCnt_W
     );
@@ -30,32 +30,44 @@ reg [2:0] cur4thCnt;
 
 always @(posedge clk)
 begin
-if (rst)
+if (adj == 1'b1 && send == 1'b1)
 begin
-	cur1stCnt <= 4'b0000;
-	cur2ndCnt <= 3'b000;
-	cur3rdCnt <= 4'b0000;
-	cur4thCnt <= 3'b000;
+	case(sel)
+		0: cur1stCnt = num;
+		1: cur2ndCnt = num;
+		2: cur3rdCnt = num;
+		3: cur4thCnt = num;
+	endcase
 end
-else if (cur1stCnt == 4'b1001 && pause != 1)
+if (adj == 1'b0 && pause == 1'b0)
 begin
-	cur1stCnt <= 4'b0000;
-	cur2ndCnt <= cur2ndCnt + 1'b1;
-	if (cur2ndCnt == 3'b101)
+	if (rst)
 	begin
+		cur1stCnt <= 4'b0000;
 		cur2ndCnt <= 3'b000;
-		cur3rdCnt <= cur3rdCnt + 1'b1;
-		if (cur3rdCnt == 4'b1001)
-		begin                                                                                                             
-			cur3rdCnt <= 4'b0000;
-			cur4thCnt <= cur4thCnt + 1'b1;
-			if (cur4thCnt == 3'b101)
-				cur4thCnt <= 3'b000;
+		cur3rdCnt <= 4'b0000;
+		cur4thCnt <= 3'b000;
+	end
+	else if (cur1stCnt == 4'b1001)
+	begin
+		cur1stCnt <= 4'b0000;
+		cur2ndCnt <= cur2ndCnt + 1'b1;
+		if (cur2ndCnt == 3'b101)
+		begin
+			cur2ndCnt <= 3'b000;
+			cur3rdCnt <= cur3rdCnt + 1'b1;
+			if (cur3rdCnt == 4'b1001)
+			begin                                                                                                             
+				cur3rdCnt <= 4'b0000;
+				cur4thCnt <= cur4thCnt + 1'b1;
+				if (cur4thCnt == 3'b101)
+					cur4thCnt <= 3'b000;
+			end
 		end
 	end
+	else if (cur1stCnt < 4'b1001)
+		cur1stCnt <= cur1stCnt + 1'b1;
 end
-else if (cur1stCnt < 4'b1001 && pause != 1)
-	cur1stCnt <= cur1stCnt + 1'b1;
 end
 
 assign cur1stCnt_W = cur1stCnt;
