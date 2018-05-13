@@ -47,7 +47,6 @@ module nexys3(
 	reg clk_en;
 	reg clk_en_d;
 
-	reg [7:0] inst_wd;
 	reg inst_pause;
 	reg is_paused = 0;
 	reg [2:0] step_d;
@@ -63,12 +62,6 @@ module nexys3(
 	wire clk2Hz;
 	wire clk400Hz;
 	wire clk1ishHz;
-		
-//	wire [7:0] segs_second0;
-//	wire [7:0] segs_second1;
-//	wire [7:0] segs_minute0;
-//	wire [7:0] segs_minute1;
-//	wire [7:0] blank_digit;
 	
 	/////////////////
 	// Async Reset //
@@ -178,7 +171,11 @@ module nexys3(
 		.min1(counter4),
 		
 		.faster_clk(clk400Hz),
-		.refresh_clk(clk1ishHz),
+		.blink_clk(clk1ishHz),
+//		.refresh_clk(clk1ishHz),
+		.sel(sel),
+		.adj(adj),
+		.pause(is_paused),
 		
 		// outputs
 		.seg(temp_seg),

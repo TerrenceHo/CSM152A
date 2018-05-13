@@ -52,7 +52,7 @@ module tb;
 
 	initial begin
 		// Initialize Inputs
-		sel = 0;
+		sel = 2'b00;
 		adj = 0;
 		num = 0;
 		btnS = 0;
@@ -62,17 +62,23 @@ module tb;
 		// Wait 100 ns for global reset to finish
 		#100;
 		btnR = 0;
-        
-		// Add stimulus here
+		
+//		 Add stimulus here
 		#100
-		sel = 0;
-		adj = 1;
+		sel = 2'b00;
+		adj = 1'b1;
 		num = 4'b1000;
+		
+		#500
 		btnS = 1;
 		
 		#100
+		btnS = 0;
 		adj = 0;
-
+	end
+	
+	always begin
+		#5 clk = ~clk;
 	end
       
 endmodule

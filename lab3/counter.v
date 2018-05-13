@@ -24,10 +24,10 @@ module counter(input clk, input rst, input pause, input [3:0] num, input [1:0] s
 	output wire [3:0] cur3rdCnt_W, output wire [2:0] cur4thCnt_W
     );
 
-reg [3:0] cur1stCnt;
-reg [2:0] cur2ndCnt;
-reg [3:0] cur3rdCnt;
-reg [2:0] cur4thCnt;
+reg [3:0] cur1stCnt = 0;
+reg [2:0] cur2ndCnt = 0;
+reg [3:0] cur3rdCnt = 0;
+reg [2:0] cur4thCnt = 0;
 
 always @(posedge clk)
 begin
