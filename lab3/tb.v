@@ -49,6 +49,10 @@ module tb;
 		.btnR(btnR), 
 		.clk(clk)
 	);
+	
+	always begin
+		#5 clk = ~clk;
+	end
 
 	initial begin
 		// Initialize Inputs
@@ -67,19 +71,14 @@ module tb;
 		#100
 		sel = 2'b00;
 		adj = 1'b1;
-		num = 4'b1000;
-		
-		#500
+		num = 4'b0110;
 		btnS = 1;
 		
 		#100
 		btnS = 0;
+		#100
 		adj = 0;
 	end
-	
-	always begin
-		#5 clk = ~clk;
-	end
-      
+
 endmodule
 

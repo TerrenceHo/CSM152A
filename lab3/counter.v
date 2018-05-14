@@ -31,7 +31,14 @@ reg [2:0] cur4thCnt = 0;
 
 always @(posedge clk)
 begin
-if (adj == 1'b1 && send == 1'b1)
+if (rst == 1'b1)
+begin
+	cur1stCnt <= 0;
+	cur2ndCnt <= 0;
+	cur3rdCnt <= 0;
+	cur4thCnt <= 0;
+end
+else if (adj == 1'b1 && send == 1'b1)
 begin
 	case(sel)
 		0: cur1stCnt <= num;
@@ -40,7 +47,7 @@ begin
 		3: cur4thCnt <= num;
 	endcase
 end
-if (adj == 1'b0 && pause == 1'b0)
+else if (adj == 1'b0 && pause == 1'b0)
 begin
 	if (rst)
 	begin
