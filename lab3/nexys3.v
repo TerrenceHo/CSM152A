@@ -23,15 +23,21 @@ module nexys3(
 	led, seg, an,
 	
 	// inputs
-	sel, adj, num, btnS, btnR, clk
+//	sel, adj, num,  
+	sw, btnS, btnR, clk
     );
 	// Automatic Input/Output
-	input [1:0] sel;
-	input adj;
-	input [3:0] num;
+	input [7:0] sw;
+//	input [1:0] sel;
+//	input adj;
+//	input [3:0] num;
 	input btnS;
 	input btnR;
 	input clk;
+	
+	wire[1:0] sel = sw[1:0];
+	wire adj = sw[2];
+	wire [3:0] num = sw[7:4];
 	 
 	output [7:0] seg;
 	output [3:0] an;
@@ -62,18 +68,7 @@ module nexys3(
 	wire clk2Hz;
 	wire clk400Hz;
 	wire clk1ishHz;
-	
-	/////////////////
-	// Async Reset //
-	/////////////////
-	assign arst_i = btnR;
-	assign rst = arst_ff[0];
 
-	always @ (posedge clk or posedge arst_i)
-		if (arst_i) 
-			arst_ff <= 2'b11;
-		else
-			arst_ff <= {1'b0, arst_ff[1]};
 			
 	///////////////////////////////////
 	////////// Timing Signal //////////
@@ -94,6 +89,19 @@ module nexys3(
 				clk_en_d <= clk_en;
 			end
 	
+		
+	/////////////////
+	// Async Reset //
+	/////////////////
+	assign arst_i = btnR;
+	assign rst = arst_ff[0];
+
+	always @ (posedge clk or posedge arst_i)
+		if (arst_i) 
+			arst_ff <= 2'b11;
+		else
+			arst_ff <= {1'b0, arst_ff[1]};
+			
 	///////////////////////////////////////////////		
 	// Instruction Stepping Control / Debouncing //
 	///////////////////////////////////////////////
@@ -145,7 +153,7 @@ module nexys3(
 	
 	counter counter_ (
 		// inputs
-		.clk(clk1Hz), .rst(rst), .send(inst_pause), .pause(is_paused),
+		.clk(clk), .clk1Hz(clk1Hz), .rst(rst), .send(is_btnS_posedge), .pause(is_paused),
 		.num(num), .sel(sel), .adj(adj),
 		
 		// outputs

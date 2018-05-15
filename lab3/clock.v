@@ -36,7 +36,7 @@ always @ (posedge(clk), posedge(rst))
 begin
     if (rst == 1'b1)
         count1 <= 32'b0;
-    else if (count1 == 50000000 - 1)
+    else if (count1 == 100000000 - 1)
         count1 <= 32'b0;
     else
         count1 <= count1 + 1;
@@ -46,10 +46,12 @@ always @ (posedge(clk), posedge(rst))
 begin
     if (rst == 1'b1)
         clk1Hz <= 1'b0;
-    else if (count1 == 50000000 - 1)
-        clk1Hz <= ~clk1Hz;
+    else if (count1 == 100000000 - 1)
+        //clk1Hz <= ~clk1Hz;
+		  clk1Hz <= 1;
     else
-        clk1Hz <= clk1Hz;
+        //clk1Hz <= clk1Hz;
+		  clk1Hz <= 0;
 end
 
 always @ (posedge(clk), posedge(rst))

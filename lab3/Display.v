@@ -27,6 +27,7 @@ module Display(min0, min1, sec0, sec1, blink_clk, sel, pause, adj,
 	input[2:0] min1;
 
 	input [1:0] sel;
+	reg[1:0] old_sel = 2'b00;
 	input pause;
 	input adj;
 	input faster_clk;
@@ -63,8 +64,22 @@ module Display(min0, min1, sec0, sec1, blink_clk, sel, pause, adj,
 //	end
 
 	always @ (posedge blink_clk) begin
-		if (adj == 1'b1)
-			isDisplaying[sel] = ~isDisplaying[sel];
+		if (adj == 1'b1) begin
+			if (old_sel != sel) begin
+				isDisplaying = 4'b0000;
+				old_sel = sel;
+			end
+			case (sel)
+			2'b10:	
+				isDisplaying[2] = ~isDisplaying[2];
+			2'b11:
+				isDisplaying[3] = ~isDisplaying[3];
+			2'b00:	
+				isDisplaying[0] = ~isDisplaying[0];
+			2'b01:	
+				isDisplaying[1] = ~isDisplaying[1];
+			endcase
+		end
 		else
 			isDisplaying = 4'b0000;
 	end
