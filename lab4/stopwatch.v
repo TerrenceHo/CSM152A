@@ -23,10 +23,16 @@ module stopwatch(
 	seg, an,
 	
 	// inputs
-	rst, clk, clk_en_d, is_btnS_posedge, 
+	rst, clk, clk_en_d, inst_pause
     );
+	input rst;
+	input clk;
+	input clk_en_d;
+	input inst_pause;
+	output [3:0] an;
+	output [7:0] seg;
 	
-	reg is_paused = 0;
+	reg is_paused = 1;
 	wire [3:0] counter1;
 	wire [2:0] counter2;
 	wire [3:0] counter3;
@@ -45,11 +51,8 @@ module stopwatch(
 	always @ (posedge clk)
 		if (rst) 
 			is_paused <= 1'b0;
-		else if (clk_en_d && (is_btnS_posedge == 1) )
-			if (is_paused == 1'b1)
-				is_paused <= 1'b0;
-			else
-				is_paused <= 1'b1;
+		else if (clk_en_d && (inst_pause == 1) )
+			is_paused <= ~is_paused;
 
 
 	///////////////////

@@ -115,20 +115,6 @@ begin
         clk1ishHz <= clk1ishHz;
 end
 
-//always @(posedge clk)
-//begin
-//	if (rst)
-//	begin
-//		count4 <= 0;
-//		clk1ishHz <= 0;
-//	end
-//	if (count4 == 30000000)
-//	begin
-//		clk1ishHz <= ~clk1ishHz;
-//		count4 <= 0;
-//	end
-//	count4 <= count4 + 1;
-//end
 
 assign clk1Hz_W = clk1Hz;
 assign clk2Hz_W = clk2Hz;

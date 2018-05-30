@@ -4,7 +4,7 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   02:34:09 05/12/2018
+// Create Date:   22:12:46 05/20/2018
 // Design Name:   nexys3
 // Module Name:   /home/ise/SharedFolderVM/CSM152A/lab3/tb.v
 // Project Name:  lab3
@@ -25,9 +25,7 @@
 module tb;
 
 	// Inputs
-	reg [1:0] sel;
-	reg adj;
-	reg [3:0] num;
+	reg [7:0] sw;
 	reg btnS;
 	reg btnR;
 	reg clk;
@@ -42,14 +40,13 @@ module tb;
 		.led(led), 
 		.seg(seg), 
 		.an(an), 
-		.sel(sel), 
-		.adj(adj), 
-		.num(num), 
+		.sw(sw), 
 		.btnS(btnS), 
 		.btnR(btnR), 
 		.clk(clk)
 	);
-	
+
+
 	always begin
 		#5 clk = ~clk;
 	end
@@ -78,7 +75,19 @@ module tb;
 		btnS = 0;
 		#100
 		adj = 0;
-	end
+	end	initial begin
+		// Initialize Inputs
+		sw = 0;
+		btnS = 0;
+		btnR = 0;
+		clk = 0;
 
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+
+	end
+      
 endmodule
 

@@ -28,11 +28,6 @@ reg [2:0] cur2ndCnt = 0;
 reg [3:0] cur3rdCnt = 0;
 reg [2:0] cur4thCnt = 0;
 
-reg [3:0] cur1stCntNew = 0;
-reg [2:0] cur2ndCntNew = 0;
-reg [3:0] cur3rdCntNew = 0;
-reg [2:0] cur4thCntNew = 0;
-
 always @(posedge clk) begin
 	if (rst)
 	begin
@@ -41,7 +36,7 @@ always @(posedge clk) begin
 		cur3rdCnt <= 0;
 		cur4thCnt <= 0;
 	end
-	if (clk1Hz) begin
+	else if (clk1Hz && pause == 1'b0) begin
 		if (cur1stCnt == 4'b1001)
 		begin
 			cur1stCnt <= 4'b0000;
@@ -64,9 +59,9 @@ always @(posedge clk) begin
 	end
 end
 
-assign cur1stCnt_W = cur1stCnt;//send ? ( (sel == 2'b00) ? cur1stCntNew : cur1stCnt ) : cur1stCnt & cur1stCntNew;
-assign cur2ndCnt_W = cur2ndCnt;//send ? ( (sel == 2'b01) ? cur2ndCntNew : cur2ndCnt ) : cur2ndCnt & cur2ndCntNew;
-assign cur3rdCnt_W = cur3rdCnt;//send ? ( (sel == 2'b10) ? cur3rdCntNew : cur3rdCnt ) : cur3rdCnt & cur3rdCntNew;
-assign cur4thCnt_W = cur4thCnt;//send ? ( (sel == 2'b11) ? cur4thCntNew : cur4thCnt ) : cur4thCnt & cur4thCntNew;
+assign cur1stCnt_W = cur1stCnt;
+assign cur2ndCnt_W = cur2ndCnt;
+assign cur3rdCnt_W = cur3rdCnt;
+assign cur4thCnt_W = cur4thCnt;
 
 endmodule

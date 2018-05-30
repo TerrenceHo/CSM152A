@@ -26,8 +26,6 @@ module seven_seg_display(min0, min1, sec0, sec1,
 	input[3:0] min0;
 	input[2:0] min1;
 
-	input [1:0] sel;
-	reg[1:0] old_sel = 2'b00;
 	input faster_clk;
 
 	output [3:0] an;
@@ -43,32 +41,30 @@ module seven_seg_display(min0, min1, sec0, sec1,
 	reg[3:0] an_temp;
 	reg[7:0] seg_temp;
 	
-	reg[3:0] isDisplaying = 4'b0000;
-	
 	always @ (posedge faster_clk) begin
 		case(counter)
 			2'b00:
 				begin
 					current_digit <= sec0;
-					an_temp <= 4'b0111 | isDisplaying;
+					an_temp <= 4'b0111;
 					counter <= counter + 1;
 				end
 			2'b01:
 				begin
 					current_digit <= sec1;
-					an_temp <= 4'b1110 | isDisplaying;
+					an_temp <= 4'b1110;
 					counter <= counter + 1;
 				end
 			2'b10:
 				begin
 					current_digit <= min0;
-					an_temp <= 4'b1101 | isDisplaying;
+					an_temp <= 4'b1101;
 					counter <= counter + 1;
 				end
 			2'b11:
 				begin
 					current_digit <= min1;
-					an_temp <= 4'b1011 | isDisplaying;
+					an_temp <= 4'b1011;
 					counter <= counter + 1;
 				end
 		endcase
