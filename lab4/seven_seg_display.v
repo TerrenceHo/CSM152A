@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module seven_seg_display(min0, min1, sec0, sec1,
-		faster_clk, seg, an);
+		faster_clk, blink_clk, blink, seg, an);
 
 	input[3:0] sec0;
 	input[2:0] sec1;
@@ -40,6 +40,15 @@ module seven_seg_display(min0, min1, sec0, sec1,
 	reg[1:0] counter = 0;
 	reg[3:0] an_temp;
 	reg[7:0] seg_temp;
+	
+	reg [3:0] isDisplaying = 4'b0000;
+	
+	always @ (posedge blink_clk) begin
+		if (blink)
+			isDisplaying = ~isDisplaying;
+		else
+			isDisplaying = 4'b0000;
+	end
 	
 	always @ (posedge faster_clk) begin
 		case(counter)

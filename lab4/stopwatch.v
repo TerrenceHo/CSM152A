@@ -43,14 +43,13 @@ module stopwatch(
 	wire clk2Hz;
 	wire clk400Hz;
 	wire clk1ishHz;
-
-	 
+	
 	//////////////////////
 	///// Pause Reg //////
 	//////////////////////
 	always @ (posedge clk)
 		if (rst) 
-			is_paused <= 1'b0;
+			is_paused <= 1'b1;
 		else if (clk_en_d && (inst_pause == 1) )
 			is_paused <= ~is_paused;
 
@@ -60,7 +59,7 @@ module stopwatch(
 	///////////////////
 	counter counter_ (
 		// inputs
-		.clk(clk), .clk1Hz(clk1Hz), .rst(rst), .pause(is_paused),
+		.clk(clk), .clk1Hz(clk1Hz), .rst(rst), .is_paused(is_paused),
 		// outputs
 		.cur1stCnt_W(counter1), .cur2ndCnt_W(counter2), 
 		.cur3rdCnt_W(counter3), .cur4thCnt_W(counter4)
@@ -77,7 +76,8 @@ module stopwatch(
 	seven_seg_display seven_seg_display_ (
 		// inputs
 		.sec0(counter1), .sec1(counter2),
-		.min0(counter3), .min1(counter4), .faster_clk(clk400Hz),
+		.min0(counter3), .min1(counter4), 
+		.faster_clk(clk400Hz), .blink_clk(clk1ishHz), .blink(is_paused),
 		// outputs
 		.seg(temp_seg), .an(temp_an)
 	);

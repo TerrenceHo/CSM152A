@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 /////////// ///////////////////////////////////////////////////////////////////////
-module counter(input clk, input clk1Hz, input rst, input pause, 
+module counter(input clk, input clk1Hz, input rst, input reg is_paused, 
 	output wire [3:0] cur1stCnt_W, output wire [2:0] cur2ndCnt_W, 
 	output wire [3:0] cur3rdCnt_W, output wire [2:0] cur4thCnt_W
     );
@@ -36,7 +36,7 @@ always @(posedge clk) begin
 		cur3rdCnt <= 0;
 		cur4thCnt <= 0;
 	end
-	else if (clk1Hz && pause == 1'b0) begin
+	else if (clk1Hz && is_paused == 1'b0) begin
 		if (cur1stCnt == 4'b1001)
 		begin
 			cur1stCnt <= 4'b0000;
