@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module nexys3(
 	// Outputs
-	led, seg, an,
+	led, seg, an, dp, hsync, vsync, vgaRed, vgaGreen, vgaBlue,
 	
 	// inputs
 	sw, btnS, btnR, btn1, clk
@@ -34,7 +34,13 @@ module nexys3(
 	output [7:0] seg;
 	output [3:0] an;
 	output [7:0] led;
-	
+	output dp;
+	output [2:0] vgaRed;
+	output [2:0] vgaGreen;
+	output [2:0] vgaBlue;
+	output hsync;
+	output vsync;
+
 	// Custom variables
 	wire rst;
 	wire arst_i;
@@ -60,6 +66,8 @@ module nexys3(
 	wire traffic2_color;
 	wire traffic3_color;
 	
+	wire dclk;
+	wire animateClk;
 	
 	/////////////////
 	// Async Reset //
@@ -140,28 +148,28 @@ module nexys3(
 	);
 	
 	traffic_light light0 ( //inputs
-		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), inst_go(is_btnS_posedge),
+		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .inst_go(is_btnS_posedge),
 		.traffic_sel(sel), .color_sel(color_sel), .start_color(start_color), 
 		.input_time(num), .traffic_num(2'b00),
 		// outputs
 		.traffic_color(traffic0_color)
 	);
 	traffic_light light1 ( //inputs
-		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), inst_go(is_btnS_posedge),
+		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .inst_go(is_btnS_posedge),
 		.traffic_sel(sel), .color_sel(color_sel), .start_color(start_color), 
 		.input_time(num), .traffic_num(2'b01),
 		// outputs
 		.traffic_color(traffic1_color)
 	);
 	traffic_light light2 ( //inputs
-		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), inst_go(is_btnS_posedge),
+		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .inst_go(is_btnS_posedge),
 		.traffic_sel(sel), .color_sel(color_sel), .start_color(start_color), 
 		.input_time(num), .traffic_num(2'b10),
 		// outputs
 		.traffic_color(traffic2_color)
 	);
 	traffic_light light3 ( //inputs
-		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), inst_go(is_btnS_posedge),
+		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .inst_go(is_btnS_posedge),
 		.traffic_sel(sel), .color_sel(color_sel), .start_color(start_color), 
 		.input_time(num), .traffic_num(2'b11),
 		// outputs
@@ -169,4 +177,28 @@ module nexys3(
 	);
 	
 	
+	
+	// VGA controller
+	// generate 7-segment clock & display clock
+
+	clockdiv U1(
+		.clk(clk),
+		.clr(rst),
+		// .segclk(segclk),
+		.animateClk(animateClk),
+		.dclk(dclk)
+	);
+
+	vga640x480 U3(
+		.animateClk(animateClk),
+		.dclk(dclk),
+		.clr(rst),
+		.hsync(hsync),
+		.vsync(vsync),
+		.red(vgaRed),
+		.green(vgaGreen),
+		.blue(vgaBlue)
+	);
+
+
 endmodule 

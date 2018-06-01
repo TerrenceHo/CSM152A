@@ -21,7 +21,7 @@
 module traffic_light(
 		// inputs
 		clk, rst, inst_send, inst_go, 
-		traffic_sel, color, start_color, input_time, traffic_num,
+		traffic_sel, color_sel, start_color, input_time, traffic_num,
 		// outputs
 		traffic_color
     );
@@ -49,7 +49,7 @@ module traffic_light(
 		.clk1Hz_W(clk1Hz)
 	);
 	
-	always @ (posedge clk) 
+	always @ (posedge clk) begin
 		if (rst) begin
 			red_time <= 4'b1010;
 			green_time <= 4'b1010;
@@ -71,22 +71,25 @@ module traffic_light(
 			end
 		end
 		
-	always @ (posedge clk1Hz)
-		if (is_running)
-			if (cur_color) begin
-				green_count <= green_count + 1'b1;
-				if (green_count == red_time) begin
-					green_count <= 4'b0000;
-					cur_color <= ~cur_color;
+		if (clk1Hz) begin
+			if (is_running) begin
+				if (cur_color) begin
+					green_count <= green_count + 1'b1;
+					if (green_count == red_time) begin
+						green_count <= 4'b0000;
+						cur_color <= ~cur_color;
+					end
+				end
+				else begin
+					red_count <= red_count + 1'b1;
+					if (red_count == red_time) begin
+						red_count <= 4'b0000;
+						cur_color <= ~cur_color;
+					end
 				end
 			end
-			else begin
-				red_count <= red_count + 1'b1;
-				if (red_count == red_time) begin
-					reg_count <= 4'b0000;
-					cur_color <= ~cur_color;
-				end
-			end
+		end
+	end
 
 	assign traffic_color = cur_color;
 endmodule
