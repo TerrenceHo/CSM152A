@@ -177,7 +177,6 @@ module nexys3(
 	);
 	
 	
-	
 	// VGA controller
 	// generate 7-segment clock & display clock
 
