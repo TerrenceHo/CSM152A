@@ -25,8 +25,9 @@ module seven_seg_display(min0, min1, sec0, sec1,
 	input[2:0] sec1;
 	input[3:0] min0;
 	input[2:0] min1;
-
+	input blink;
 	input faster_clk;
+	input blink_clk;
 
 	output [3:0] an;
 	output [7:0] seg;

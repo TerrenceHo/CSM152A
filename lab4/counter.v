@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 /////////// ///////////////////////////////////////////////////////////////////////
-module counter(input clk, input clk1Hz, input rst, input reg is_paused, 
+module counter(input clk, input clk1Hz, input rst, input is_paused, 
 	output wire [3:0] cur1stCnt_W, output wire [2:0] cur2ndCnt_W, 
 	output wire [3:0] cur3rdCnt_W, output wire [2:0] cur4thCnt_W
     );
