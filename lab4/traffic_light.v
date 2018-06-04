@@ -55,6 +55,7 @@ module traffic_light(
 			green_time <= 4'b1010;
 			red_count <= 4'b0000;
 			green_count <= 4'b0000;
+			is_running <= 1'b0;
 		end
 		else if (inst_go) begin
 			is_running <= ~is_running;
@@ -75,7 +76,7 @@ module traffic_light(
 			if (is_running) begin
 				if (cur_color) begin
 					green_count <= green_count + 1'b1;
-					if (green_count == red_time) begin
+					if (green_count == green_time) begin
 						green_count <= 4'b0000;
 						cur_color <= ~cur_color;
 					end

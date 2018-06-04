@@ -22,6 +22,10 @@ module vga640x480(
 	input wire animateClk,
 	input wire dclk,			//pixel clock: 25MHz
 	input wire clr,			//asynchronous reset
+	input wire traffic0_color,
+	input wire traffic1_color,
+	input wire traffic2_color,
+	input wire traffic3_color,
 	output wire hsync,		//horizontal sync out
 	output wire vsync,		//vertical sync out
 	output reg [2:0] red,	//red vga output
@@ -100,6 +104,10 @@ reg[7:0] color_magenta = 8'b11100011;
 reg[7:0] color_red = 8'b11100000;
 reg[7:0] color_blue = 8'b00000011;
 
+//cars
+reg[9:0] car_width = 30;
+reg[9:0] car_height = 60;
+
 //functions
 //1) hbrange takes the lower and upper bound wrt to the beginning
 //2) hbsize takes the lower bound and the size wrt to the beginning
@@ -174,12 +182,26 @@ function rectangle_coords;
 	end
 endfunction
 
+//function rectangle_coords_reverse;
+//	input[9:0] x, y, x1, y1;
+//	begin
+//		rectangle_coords = (vfrange(y,y1) && hfrange(x,x1));
+//	end
+//endfunction
+
 function rectangle_size;
 	input[9:0] x, y, width, height;
 	begin
 		rectangle_size = rectangle_coords(x,y, x + width, y + height);
 	end
 endfunction
+
+//function rectangle_size_reverse;
+//	input[9:0] x, y, width, height;
+//	begin
+//		rectangle_size = rectangle_coords_reverse(x,y, x + width, y + height);
+//	end
+//endfunction
 
 //REUSABLE LIBRARY COMPONENTS
 function horizontal_dbline;
@@ -241,6 +263,41 @@ function green_light;
 	end
 endfunction
 
+//Directions: 0 is top, 1 is right, 2 is down, and 3 is left
+//Orientation (computed from direction): 0 is vertical and 1 is horizontal
+//Speed: 1 is increment_speed1 and 2 is increment speed2
+//function car;
+//	input[4:0] car_number;
+//	input[9:0] x, y;
+//	input[7:0] color;
+//	input[2:0] speed;
+//	input[2:0] direction;
+//	input[1:0] isEnabled;
+//	reg[1:0] orientation;
+//	reg[9:0] increment_counter;
+//	begin
+//		if (isEnabled)
+//		begin
+//			case (direction)
+////				0:
+////					orientation = 0;
+////					if (speed == 1)
+////						increment_counter = y_increment_speed1;
+////					else if (speed = 2)
+////						increment_counter = y_increment_speed2;
+//				2'b01: 
+//					orientation = 1;
+//					if (speed == 1)
+//						increment_counter = x_increment_speed1;
+//					else if (speed = 2)
+//						increment_counter = x_increment_speed2;
+//			endcase
+//			car = true;
+//		end
+//		else
+//			car = false;
+//	end
+//endfunction
 //function circle;
 //	input[9:0] x,y,r;
 //	reg[9:0] xc; //= x + r;
@@ -261,14 +318,26 @@ endfunction
 reg[1:0] flag = 1'b0;
 
 //ANIMATIONS
-reg[9:0] x_increment = 10'b00000000;
+reg[9:0] x_increment_speed1 = 10'b0000000000;
+reg[9:0] x_increment_speed2 = 10'b0000000000;
 
+reg[9:0] y_increment_speed1 = 10'b0000000000;
+reg[9:0] y_increment_speed2 = 10'b0000000000;
+
+//always @ (posedge clk)
+//	if animateClk
+//		dfj
 // Assignment statements can only be used on type "reg" and should be of the "blocking" type: =
-always @(*)
+always @(posedge dclk)
 begin
     if (animateClk == 1'b1 && flag == 1'b0)
     begin
-        x_increment = x_increment + 1;
+        x_increment_speed1 = x_increment_speed1 + 1;
+		  x_increment_speed2 = x_increment_speed2 + 2;
+		  
+		  y_increment_speed1 = y_increment_speed1 + 1;
+		  y_increment_speed2 = y_increment_speed2 + 2;
+		  
         flag = 1'b1;
     end
     else if (animateClk == 1'b0)
@@ -280,31 +349,32 @@ begin
 	// first check if we're within vertical active video range
 	if (vc >= vbp && vc < vfp)
 	begin
-//		if (circle(0,0,20))
-//		begin	
-//			rgb = color_green;
-//		end
-//		if (rectangle_size(10 + x_increment, 315, 60, 30))
-        if (rectangle_coords(10 + x_increment, 315, 70 + x_increment, 345))
+		if (rectangle_size(0 + x_increment_speed2, 255, 60, 30))
 			rgb = color_cyan;
+		else if (rectangle_size(80 + x_increment_speed1, 315, 60, 30) || rectangle_size(70 + x_increment_speed2, 255, 60, 30))
+			rgb = color_magenta;
+		else if (rectangle_size(150 + x_increment_speed1, 315, 60, 30) || rectangle_size(140 + x_increment_speed2, 255, 60, 30))
+			rgb = color_blue;
+		else if (rectangle_size(220 + x_increment_speed1, 315, 60, 30) || rectangle_size(210 + x_increment_speed2, 255, 60, 30))
+			rgb = color_green;
 		else if (rectangle_coords(200, 120, 440, 360))
-		begin
 			rgb = color_black;
-		end
-		else if (red_light(5, 182) || red_light(615, 283) || red_light(363, 5) || red_light(262,460))
-		begin
-			if (animateClk)
-				rgb = color_red;
-			else
-				rgb = color_black;
-		end
-		else if (green_light(5, 163) || green_light(615, 302) || green_light(382, 5) || green_light(243, 460))
-		begin
-			if (animateClk)
-				rgb = color_black; //rgb = color_green
-			else
-				rgb = color_green;
-		end
+		else if (red_light(5, 182))
+			rgb = traffic0_color ? color_black : color_red;
+		else if (red_light(615, 283)) 
+			rgb = traffic1_color ? color_black : color_red;
+		else if (red_light(363, 5))
+			rgb = traffic2_color ? color_black : color_red;
+		else if (red_light(262,460))
+			rgb = traffic3_color ? color_black : color_red;
+		else if (green_light(5, 163))
+			rgb = traffic0_color ? color_red : color_black;
+		else if (green_light(615, 302))
+			rgb = traffic1_color ? color_green : color_black; 
+		else if (green_light(382, 5))
+			rgb = traffic2_color ? color_green : color_black;
+		else if (green_light(243, 460))
+			rgb = traffic3_color ? color_green : color_black;
 		else if (vert_traffic_light_box(0, 160) || vert_traffic_light_box(610,280))
 		begin
 			rgb = color_yellow;
