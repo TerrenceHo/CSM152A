@@ -332,15 +332,18 @@ begin
     if (animateClk == 1'b1 && flag == 1'b0)
     begin
 		
-		  if (traffic0_color)
+		  if (traffic1_color)
 		  begin
-				x_increment_speed1 = x_increment_speed1 + 1;
+		  	   x_increment_speed1 = x_increment_speed1 + 1;
 				x_increment_speed2 = x_increment_speed2 + 2;
-		  
-				y_increment_speed1 = y_increment_speed1 + 1;
-				y_increment_speed2 = y_increment_speed2 + 2;
 		  end
-		  
+		  else
+		  begin
+				if (x_increment_speed1 < 140 || x_increment_speed1 > 140)
+					x_increment_speed1 = x_increment_speed1 + 1;
+				if (x_increment_speed2 < 140 || x_increment_speed2 > 140)
+					x_increment_speed2 = x_increment_speed2 + 2;
+		  end
         flag = 1'b1;
     end
     else if (animateClk == 1'b0)
@@ -385,11 +388,11 @@ begin
 		
 		//draw the cars
 		else if (car(1, 0, 255, color_cyan, 1, 1, 1));
-		else if (car(1, 70, 255, color_magenta, 1, 1, 1));
-		else if (car(1, 140, 255, color_green, 1, 1, 1));
+//		else if (car(1, 70, 255, color_magenta, 1, 1, 1));
+//		else if (car(1, 140, 255, color_green, 1, 1, 1));
 		else if (car(1, 0, 315, color_blue, 2, 1, 1));
-		else if (car(1, 80, 315, color_green, 2, 1, 1));
-		else if (car(1, 150, 315, color_blue, 2, 1, 1));
+//		else if (car(1, 80, 315, color_green, 2, 1, 1));
+//		else if (car(1, 150, 315, color_blue, 2, 1, 1));
 		else if (car(1, 275, 0, color_yellow, 1, 2, traffic1_color));
 		
 		
