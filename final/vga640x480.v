@@ -106,7 +106,9 @@ reg[7:0] color_red = 8'b11100000;
 reg[7:0] color_blue = 8'b00000011;
 
 //cars
-reg collision = 1;
+reg collision = 0;
+assign is_game_over = collision;
+
 reg[9:0] car_width = 60;
 reg[9:0] car_height = 30;
 
@@ -297,13 +299,13 @@ function car;
 						increment_counter = y_increment_speed1_reverse;
 					else if (speed == 2)
 						increment_counter = y_increment_speed2_reverse;
+					
+					carArrX[car_number] = x;
+					carArrY[car_number] = y + increment_counter;
+					carArrOrient[car_number] = orientation;
 						
 					if (rectangle_size_reverse(x, y + increment_counter, car_height, car_width))
 					begin
-						carArrX[car_number] = x;
-						carArrY[car_number] = y + increment_counter;
-						carArrOrient[car_number] = orientation;
-						
 						rgb = color;
 						car = 1;
 					end
@@ -318,12 +320,12 @@ function car;
 					else if (speed == 2)
 						increment_counter = x_increment_speed2;
 						
+					carArrX[car_number] = x + increment_counter;
+					carArrY[car_number] = y;
+					carArrOrient[car_number] = orientation;
+						
 					if (rectangle_size(x + increment_counter, y, car_width, car_height))
 					begin
-						carArrX[car_number] = x + increment_counter;
-						carArrY[car_number] = y;
-						carArrOrient[car_number] = orientation;
-						
 						rgb = color;
 						car = 1;
 					end
@@ -338,12 +340,12 @@ function car;
 					else if (speed == 2)
 						increment_counter = y_increment_speed2;
 						
+					carArrX[car_number] = x;
+					carArrY[car_number] = y + increment_counter;
+					carArrOrient[car_number] = orientation;
+						
 					if (rectangle_size(x, y + increment_counter, car_height, car_width))
 					begin
-						carArrX[car_number] = x;
-						carArrY[car_number] = y + increment_counter;
-						carArrOrient[car_number] = orientation;
-						
 						rgb = color;
 						car = 1;
 					end
@@ -357,13 +359,13 @@ function car;
 						increment_counter = x_increment_speed1_reverse;
 					else if (speed == 2)
 						increment_counter = x_increment_speed2_reverse;
-						
+					
+					carArrX[car_number] = x + increment_counter;
+					carArrY[car_number] = y;
+					carArrOrient[car_number] = orientation;
+					
 					if (rectangle_size_reverse(x + increment_counter, y, car_width, car_height))
 					begin	
-						carArrX[car_number] = x + increment_counter;
-						carArrY[car_number] = y;
-						carArrOrient[car_number] = orientation;
-				
 						rgb = color;
 						car = 1;
 					end
@@ -380,11 +382,11 @@ reg [3:0] j;
 always @(negedge animateClk)
 begin
 	for(i=0; i < 8; i=i+1)
-		for(j=0; j < 8; j=j+1)
+		for(j=i+1; j < 8; j=j+1)
 		begin
 			if(carArrOrient[i] != carArrOrient[j])
 			begin
-				if(carArrOrient[i] == 1)
+				if(carArrOrient[i] == 0)
 				begin
 					if((carArrX[i] >= carArrX[j] && carArrX[i] <= (carArrX[j] + 60)) || 
 					((carArrX[i] + 30) >= carArrX[j] && (carArrX[i] + 30) <=  (carArrX[j] + 60)))
@@ -392,10 +394,14 @@ begin
 						if((carArrY[i] >= carArrY[j] && carArrY[i] <= carArrY[j] + 30) || 
 						(carArrY[i] + 60 >= carArrY[j] && carArrY[i] + 60 <= carArrY[j] + 30))
 							collision <= 1'b1;
+						else
+							collision <= collision;
 					end
 					if((carArrX[i] >= carArrX[j] && carArrX[i] + 30 <= carArrX[j] + 60) && 
 					(carArrY[i] <= carArrY[j] && carArrY[i] + 60 >= carArrY[j] + 30))
 						collision <= 1'b1;
+					else
+						collision <= collision;
 				end
 			end
 		end
