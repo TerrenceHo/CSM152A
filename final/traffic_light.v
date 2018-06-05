@@ -71,19 +71,23 @@ module traffic_light(
 		
 		if (clk1Hz) begin
 			if (is_running) begin
-				if (cur_color) begin
-					green_count <= green_count + 1'b1;
+				if (cur_color) begin					
 					if (green_count == green_time) begin
 						green_count <= 4'b0001;
-						cur_color <= ~cur_color;
+						if(green_time != 0)
+							cur_color <= ~cur_color;
 					end
+					else 
+						green_count <= green_count + 1'b1;
 				end
 				else begin
-					red_count <= red_count + 1'b1;
 					if (red_count == red_time) begin
 						red_count <= 4'b0001;
-						cur_color <= ~cur_color;
+						if (red_time != 0)
+							cur_color <= ~cur_color;
 					end
+					else 
+						red_count <= red_count + 1'b1;
 				end
 			end
 		end
