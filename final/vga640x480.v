@@ -377,22 +377,23 @@ begin
 	begin
 	
 		//draw the traffic lights
-		if (red_light(5, 182))
-			rgb = (traffic0_color ? color_black : color_red);
+		if (red_light(363, 5))
+			rgb = traffic0_color ? color_black : color_red;
 		else if (red_light(615, 283)) 
 			rgb = traffic1_color ? color_black : color_red;
-		else if (red_light(363, 5))
-			rgb = traffic2_color ? color_black : color_red;
 		else if (red_light(262,460))
-			rgb = traffic3_color ? color_black : color_red;
-		else if (green_light(5, 163))
-			rgb = (traffic0_color ? color_green : color_black);
+			rgb = traffic2_color ? color_black : color_red;
+		else if (red_light(5, 182))
+			rgb = (traffic3_color ? color_black : color_red);
+			
+		else if (green_light(382, 5))
+			rgb = traffic0_color ? color_green : color_black;
 		else if (green_light(615, 302))
 			rgb = traffic1_color ? color_green : color_black; 
-		else if (green_light(382, 5))
-			rgb = traffic2_color ? color_green : color_black;
 		else if (green_light(243, 460))
-			rgb = traffic3_color ? color_green : color_black;
+			rgb = traffic2_color ? color_green : color_black;	
+		else if (green_light(5, 163))
+			rgb = (traffic3_color ? color_green : color_black);
 		
 		//draw the traffic light boxes
 		else if (vert_traffic_light_box(0, 160) || vert_traffic_light_box(610,280))

@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module traffic_light(
 		// inputs
-		clk, rst, inst_send, inst_go, 
+		clk, rst, inst_send, is_running,
 		traffic_sel, color_sel, start_color, input_time, traffic_num,
 		// outputs
 		traffic_color
@@ -28,7 +28,8 @@ module traffic_light(
 	input clk;
 	input rst;
 	input inst_send;  // set traffic times
-	input inst_go; // start counter, starting simluation
+	input is_running; // bit to tell if traffic counting should start.
+//	input inst_go; // start counter, starting simluation
 	input [1:0] traffic_num; // signifies which traffic light this is
 	input [1:0] traffic_sel; // signifies if this traffic light was selected.
 	input color_sel; // 1 = green, 0 = red
@@ -37,7 +38,6 @@ module traffic_light(
 	output traffic_color; // output of the traffic light color
 	
 	wire clk1Hz;
-	reg is_running = 1'b0; // tells if traffic should count up
 	reg cur_color; //red = 0, green = 1
 	reg [4:0] red_time;
 	reg [4:0] green_time;
@@ -55,11 +55,7 @@ module traffic_light(
 			green_time <= 4'b1010;
 			red_count <= 4'b0000;
 			green_count <= 4'b0000;
-			is_running <= 1'b0;
 			cur_color <= 1'b0;
-		end
-		else if (inst_go) begin
-			is_running <= 1;//~is_running;
 		end
 		else if (inst_send) begin
 			if (traffic_sel == traffic_num) begin
@@ -93,5 +89,5 @@ module traffic_light(
 		end
 	end
 
-	assign traffic_color = cur_color;
+	assign traffic_color = cur_color & is_running;
 endmodule
