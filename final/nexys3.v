@@ -115,10 +115,10 @@ module nexys3(
 				step_e[2:0] <= {btn1, step_e[2:1]};
 			end
 	
-	wire is_btnS_posedge = 1;
-	wire is_btn1_posedge = 1;
-//	assign is_btnS_posedge = ~step_d[0] & step_d[1];
-//	assign is_btn1_posedge = ~step_e[0] & step_e[1];
+	wire is_btnS_posedge;
+	wire is_btn1_posedge;
+	assign is_btnS_posedge = ~step_d[0] & step_d[1];
+	assign is_btn1_posedge = ~step_e[0] & step_e[1];
 	always @ (posedge clk)
 		if(rst)
 			inst_pause <= 1'b0;
@@ -130,12 +130,12 @@ module nexys3(
 	/////////////////////////////////////////		
 	////////// Instruction Counter //////////
 	/////////////////////////////////////////
-	always @ (posedge clk)
-		if (rst)
-			inst_cnt <= 0;
-		else if (inst_pause)
-			inst_cnt <= inst_cnt + 1;
-	assign led[7:0] = inst_cnt[7:0];
+//	always @ (posedge clk)
+//		if (rst)
+//			inst_cnt <= 0;
+//		else if (inst_pause)
+//			inst_cnt <= inst_cnt + 1;
+//	assign led[7:0] = inst_cnt[7:0];
 
 	/////////////////////////////
 	////////// Modules //////////
@@ -176,9 +176,10 @@ module nexys3(
 		.traffic_color(traffic3_color)
 	);
 	
-//	always @ (posedge clk)
-//		inst_cnt[7] <= traffic3_color;
-//	assign led = inst_cnt;
+	always @ (posedge clk)
+		inst_cnt[7] <= traffic3_color;
+	assign led = inst_cnt;
+	
 	// VGA controller
 	// generate 7-segment clock & display clock
 

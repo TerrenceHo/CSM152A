@@ -53,8 +53,7 @@ module traffic_light_tb;
 	);
 	
 	always begin
-//		 #1000000 clk = ~clk;
-		#5 clk = ~clk;
+		#1000000 clk = ~clk;
 	end
 	initial begin
 		// Initialize Inputs
@@ -74,9 +73,6 @@ module traffic_light_tb;
 		// Add stimulus here
 		
 		inst_send = 1;
-		#100;
-		
-		inst_go = 1;
 	end
       
 endmodule

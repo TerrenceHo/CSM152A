@@ -38,7 +38,7 @@ module traffic_light(
 	
 	wire clk1Hz;
 	reg is_running = 1'b0; // tells if traffic should count up
-	reg cur_color = 1'b0; //red = 0, green = 1
+	reg cur_color; //red = 0, green = 1
 	reg [4:0] red_time;
 	reg [4:0] green_time;
 	reg [4:0] red_count = 4'b0000;
@@ -59,7 +59,7 @@ module traffic_light(
 			cur_color <= 1'b0;
 		end
 		else if (inst_go) begin
-			is_running <= 1; //~is_running;
+			is_running <= 1;//~is_running;
 		end
 		else if (inst_send) begin
 			if (traffic_sel == traffic_num) begin
@@ -73,7 +73,7 @@ module traffic_light(
 			end
 		end
 		
-//		if (clk1Hz) begin
+		if (clk1Hz) begin
 			if (is_running) begin
 				if (cur_color) begin
 					green_count <= green_count + 1'b1;
@@ -90,7 +90,7 @@ module traffic_light(
 					end
 				end
 			end
-//		end
+		end
 	end
 
 	assign traffic_color = cur_color;

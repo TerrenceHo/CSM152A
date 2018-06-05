@@ -105,8 +105,8 @@ reg[7:0] color_red = 8'b11100000;
 reg[7:0] color_blue = 8'b00000011;
 
 //cars
-reg[9:0] car_width = 30;
-reg[9:0] car_height = 60;
+reg[9:0] car_width = 60;
+reg[9:0] car_height = 30;
 
 //functions
 //1) hbrange takes the lower and upper bound wrt to the beginning
@@ -182,12 +182,12 @@ function rectangle_coords;
 	end
 endfunction
 
-//function rectangle_coords_reverse;
-//	input[9:0] x, y, x1, y1;
-//	begin
-//		rectangle_coords = (vfrange(y,y1) && hfrange(x,x1));
-//	end
-//endfunction
+function rectangle_coords_reverse;
+	input[9:0] x, y, x1, y1;
+	begin
+		rectangle_coords_reverse = (vfrange(y,y1) && hfrange(x,x1));
+	end
+endfunction
 
 function rectangle_size;
 	input[9:0] x, y, width, height;
@@ -196,12 +196,12 @@ function rectangle_size;
 	end
 endfunction
 
-//function rectangle_size_reverse;
-//	input[9:0] x, y, width, height;
-//	begin
-//		rectangle_size = rectangle_coords_reverse(x,y, x + width, y + height);
-//	end
-//endfunction
+function rectangle_size_reverse;
+	input[9:0] x, y, width, height;
+	begin
+		rectangle_size_reverse = rectangle_coords_reverse(x,y, x + width, y + height);
+	end
+endfunction
 
 //REUSABLE LIBRARY COMPONENTS
 function horizontal_dbline;
@@ -266,54 +266,53 @@ endfunction
 //Directions: 0 is top, 1 is right, 2 is down, and 3 is left
 //Orientation (computed from direction): 0 is vertical and 1 is horizontal
 //Speed: 1 is increment_speed1 and 2 is increment speed2
-//function car;
-//	input[4:0] car_number;
-//	input[9:0] x, y;
-//	input[7:0] color;
-//	input[2:0] speed;
-//	input[2:0] direction;
-//	input[1:0] isEnabled;
-//	reg[1:0] orientation;
-//	reg[9:0] increment_counter;
-//	begin
-//		if (isEnabled)
-//		begin
-//			case (direction)
-////				0:
-////					orientation = 0;
-////					if (speed == 1)
-////						increment_counter = y_increment_speed1;
-////					else if (speed = 2)
-////						increment_counter = y_increment_speed2;
-//				2'b01: 
-//					orientation = 1;
-//					if (speed == 1)
-//						increment_counter = x_increment_speed1;
-//					else if (speed = 2)
-//						increment_counter = x_increment_speed2;
-//			endcase
-//			car = true;
-//		end
-//		else
-//			car = false;
-//	end
-//endfunction
-//function circle;
-//	input[9:0] x,y,r;
-//	reg[9:0] xc; //= x + r;
-//	reg[9:0] yc; //= y + r;
-//	reg[9:0] i,j;
-//	begin
-//		xc = x + r;
-//		yc = y + r;
-//		for(i = x; i < x + 2*r; i=i+1) begin
-//			for (j = y; j < y + 2*r; j=j+1) begin
-//				if ((x-xc)*(x-xc) + (y-yc)*(y-yc) < r*r)
-//					circle = 1;
-//			end
-//		end
-//	end
-//endfunction
+function car;
+	input[4:0] car_number;
+	input[9:0] x, y;
+	input[7:0] color;
+	input[2:0] speed;
+	input[2:0] direction;
+	input[1:0] isMoving;
+	
+	reg[1:0] orientation;
+	reg[9:0] increment_counter;
+	begin
+		case (direction)
+			1:
+				begin
+					orientation = 1;
+					if (speed == 1)
+						increment_counter = x_increment_speed1;
+					else if (speed == 2)
+						increment_counter = x_increment_speed2;
+						
+					if (rectangle_size(x + increment_counter, y, car_width, car_height))
+					begin
+						rgb = color;
+						car = 1;
+					end
+					else
+						car = 0;
+				end
+			2:
+				begin
+					orientation = 0;
+					if (speed == 1)
+						increment_counter = y_increment_speed1;
+					else if (speed == 2)
+						increment_counter = y_increment_speed2;
+						
+					if (rectangle_size(x, y + increment_counter, car_height, car_width))
+					begin
+						rgb = color;
+						car = 1;
+					end
+					else
+						car = 0;
+				end
+		endcase
+	end
+endfunction
 
 reg[1:0] flag = 1'b0;
 
@@ -332,11 +331,15 @@ always @(posedge dclk)
 begin
     if (animateClk == 1'b1 && flag == 1'b0)
     begin
-        x_increment_speed1 = x_increment_speed1 + 1;
-		  x_increment_speed2 = x_increment_speed2 + 2;
+		
+		  if (traffic0_color)
+		  begin
+				x_increment_speed1 = x_increment_speed1 + 1;
+				x_increment_speed2 = x_increment_speed2 + 2;
 		  
-		  y_increment_speed1 = y_increment_speed1 + 1;
-		  y_increment_speed2 = y_increment_speed2 + 2;
+				y_increment_speed1 = y_increment_speed1 + 1;
+				y_increment_speed2 = y_increment_speed2 + 2;
+		  end
 		  
         flag = 1'b1;
     end
@@ -347,21 +350,13 @@ begin
 	//NOTE
 	//We always draw in the hierarchy of the smallest elements on the screen to the larger onesa
 	// first check if we're within vertical active video range
+	//car(car_numner, x, y, color, speed, direction, isMoving);
 	if (vc >= vbp && vc < vfp)
 	begin
-		if (rectangle_size(0 + x_increment_speed2, 255, 60, 30))
-			rgb = color_cyan;
-		else if (rectangle_size(80 + x_increment_speed1, 315, 60, 30) || rectangle_size(70 + x_increment_speed2, 255, 60, 30))
-			rgb = color_magenta;
-		else if (rectangle_size(150 + x_increment_speed1, 315, 60, 30) || rectangle_size(140 + x_increment_speed2, 255, 60, 30))
-			rgb = color_blue;
-		else if (rectangle_size(220 + x_increment_speed1, 315, 60, 30) || rectangle_size(210 + x_increment_speed2, 255, 60, 30))
-			rgb = color_green;
-		else if (rectangle_coords(200, 120, 440, 360))
-			rgb = color_black;
-			
-		else if (red_light(5, 182))
-			rgb = traffic0_color ? color_black : color_red;
+	
+		//draw the traffic lights
+		if (red_light(5, 182))
+			rgb = (traffic0_color ? color_black : color_red);
 		else if (red_light(615, 283)) 
 			rgb = traffic1_color ? color_black : color_red;
 		else if (red_light(363, 5))
@@ -369,13 +364,15 @@ begin
 		else if (red_light(262,460))
 			rgb = traffic3_color ? color_black : color_red;
 		else if (green_light(5, 163))
-			rgb = traffic0_color ? color_green : color_black;
+			rgb = (traffic0_color ? color_green : color_black);
 		else if (green_light(615, 302))
 			rgb = traffic1_color ? color_green : color_black; 
 		else if (green_light(382, 5))
 			rgb = traffic2_color ? color_green : color_black;
 		else if (green_light(243, 460))
 			rgb = traffic3_color ? color_green : color_black;
+		
+		//draw the traffic light boxes
 		else if (vert_traffic_light_box(0, 160) || vert_traffic_light_box(610,280))
 		begin
 			rgb = color_yellow;
@@ -384,6 +381,22 @@ begin
 		begin
 			rgb = color_yellow;
 		end
+		
+		//draw the cars
+		else if (car(1, 0, 255, color_cyan, 1, 1, 1));
+		else if (car(1, 70, 255, color_magenta, 1, 1, 1));
+		else if (car(1, 140, 255, color_green, 1, 1, 1));
+		else if (car(1, 0, 315, color_blue, 2, 1, 1));
+		else if (car(1, 80, 315, color_green, 2, 1, 1));
+		else if (car(1, 150, 315, color_blue, 2, 1, 1));
+		else if (car(1, 275, 0, color_yellow, 1, 2, traffic1_color));
+		
+		
+		//draw the black square in the center
+		else if (rectangle_coords(200, 120, 440, 360))
+			rgb = color_black;
+			
+		
 		//draw the double yellow lines
 		else if (horizontal_dbline(0,232) || horizontal_dbline(440,232) || vertical_dbline(312,0) || vertical_dbline(312,360))
 		begin
