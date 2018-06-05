@@ -74,7 +74,7 @@ module traffic_light(
 				if (cur_color) begin					
 					if (green_count == green_time) begin
 						green_count <= 4'b0001;
-						if(green_time != 0)
+						if(red_time != 0)
 							cur_color <= ~cur_color;
 					end
 					else 
@@ -83,7 +83,7 @@ module traffic_light(
 				else begin
 					if (red_count == red_time) begin
 						red_count <= 4'b0001;
-						if (red_time != 0)
+						if (green_time != 0)
 							cur_color <= ~cur_color;
 					end
 					else 
