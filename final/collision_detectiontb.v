@@ -4,9 +4,9 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   20:09:07 06/01/2018
+// Create Date:   18:40:42 06/05/2018
 // Design Name:   collision_detection
-// Module Name:   /home/ise/Xilinx_host/CSM152A/lab4/collision_detectiontb.v
+// Module Name:   /home/ise/SharedFolderVM/CSM152A/final/collision_detectiontb.v
 // Project Name:  lab4
 // Target Device:  
 // Tool versions:  
@@ -26,11 +26,13 @@ module collision_detectiontb;
 
 	// Inputs
 	reg clk;
-	reg carX;
-	reg carY;
-	reg carOrient;
-	reg carIndex;
-	reg collision;
+	reg [9:0] carX;
+	reg [9:0] carY;
+	reg [1:0] carOrient;
+	reg [3:0] carIndex;
+
+	// Outputs
+	wire collision;
 
 	// Instantiate the Unit Under Test (UUT)
 	collision_detection uut (
@@ -48,7 +50,7 @@ module collision_detectiontb;
 		carY = 0;
 		carOrient = 0;
 		carIndex = 0;
-		collision = 0;
+//		collision = 0;
 		clk = 0;
 
 		// Wait 100 ns for global reset to finish
@@ -64,9 +66,15 @@ module collision_detectiontb;
 		carOrient = 0;
 		carIndex = 1;
 		// Add stimulus here
+		
+		#100
+		carX = 10;
+		carY = 130;
+		carOrient = 0;
+		carIndex = 1;
 
 	end
    always #5 clk = ~clk;
-	
+      
 endmodule
 

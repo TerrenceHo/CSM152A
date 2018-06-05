@@ -57,6 +57,7 @@ module nexys3(
 	reg [2:0] step_e;
 	reg [7:0] inst_cnt;
 	reg is_running = 1'b0;
+	reg is_game_over = 1'b0;
 	
 	wire[1:0] sel = sw[1:0];
 	wire color_sel = sw[2];
@@ -151,7 +152,8 @@ module nexys3(
 		// outputs
 		.seg(seg), .an(an),
 		// inputs
-		.rst(rst), .clk(clk), .clk_en_d(clk_en_d), .inst_pause(is_btnS_posedge)
+		.rst(rst), .clk(clk), .clk_en_d(clk_en_d), .inst_pause(is_btnS_posedge),
+		.is_game_over(is_game_over)
 	);
 	
 	traffic_light light0 ( //inputs
@@ -182,10 +184,6 @@ module nexys3(
 		// outputs
 		.traffic_color(traffic3_color)
 	);
-	
-//	always @ (posedge clk)
-//		inst_cnt[7] <= traffic3_color;
-//	assign led = inst_cnt;
 	
 	// VGA controller
 	// generate 7-segment clock & display clock

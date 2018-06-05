@@ -5,8 +5,5 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="warning" file="HDLCompiler" num="1016" delta="unknown" >"/home/ise/SharedFolderVM/CSM152A/lab4/traffic_light.v" Line 47: Port <arg fmt="%s" index="1">clk2Hz_W</arg> is not connected to this instance
-</msg>
-
 </messages>
 

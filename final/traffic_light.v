@@ -74,14 +74,14 @@ module traffic_light(
 				if (cur_color) begin
 					green_count <= green_count + 1'b1;
 					if (green_count == green_time) begin
-						green_count <= 4'b0000;
+						green_count <= 4'b0001;
 						cur_color <= ~cur_color;
 					end
 				end
 				else begin
 					red_count <= red_count + 1'b1;
 					if (red_count == red_time) begin
-						red_count <= 4'b0000;
+						red_count <= 4'b0001;
 						cur_color <= ~cur_color;
 					end
 				end

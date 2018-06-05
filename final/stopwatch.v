@@ -23,12 +23,13 @@ module stopwatch(
 	seg, an,
 	
 	// inputs
-	rst, clk, clk_en_d, inst_pause
+	rst, clk, clk_en_d, inst_pause, is_game_over
     );
 	input rst;
 	input clk;
 	input clk_en_d;
 	input inst_pause;
+	input is_game_over;
 	output [3:0] an;
 	output [7:0] seg;
 	
@@ -52,7 +53,8 @@ module stopwatch(
 			is_paused <= 1'b1;
 		else if (clk_en_d && (inst_pause == 1) )
 			is_paused <= ~is_paused;
-
+		else if (is_game_over)
+			is_paused = 1'b1;
 
 	///////////////////
 	///// Modules /////
@@ -77,7 +79,7 @@ module stopwatch(
 		// inputs
 		.sec0(counter1), .sec1(counter2),
 		.min0(counter3), .min1(counter4), 
-		.faster_clk(clk400Hz), .blink_clk(clk1ishHz), .blink(is_paused),
+		.faster_clk(clk400Hz), .blink_clk(clk1ishHz), .blink(is_game_over),
 		// outputs
 		.seg(temp_seg), .an(temp_an)
 	);

@@ -56,25 +56,25 @@ module seven_seg_display(min0, min1, sec0, sec1,
 			2'b00:
 				begin
 					current_digit <= sec0;
-					an_temp <= 4'b0111;
+					an_temp <= 4'b0111 | isDisplaying;
 					counter <= counter + 1;
 				end
 			2'b01:
 				begin
 					current_digit <= sec1;
-					an_temp <= 4'b1110;
+					an_temp <= 4'b1110 | isDisplaying;
 					counter <= counter + 1;
 				end
 			2'b10:
 				begin
 					current_digit <= min0;
-					an_temp <= 4'b1101;
+					an_temp <= 4'b1101 | isDisplaying;
 					counter <= counter + 1;
 				end
 			2'b11:
 				begin
 					current_digit <= min1;
-					an_temp <= 4'b1011;
+					an_temp <= 4'b1011 | isDisplaying;
 					counter <= counter + 1;
 				end
 		endcase
