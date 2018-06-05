@@ -163,14 +163,14 @@ endfunction
 function vfrange;
 	input[9:0] lowerBound, upperBound;
 	begin
-		vfrange = (vc >= (hfp - upperBound) && hc < (hfp - lowerBound));
+		vfrange = (vc >= (vfp - upperBound) && vc < (vfp - lowerBound));
 	end
 endfunction
 
 function vfsize;
 	input[9:0] lowerBound, size;
 	begin
-		vfsize = (hc >= (hfp - lowerBound - size) && hc < (hfp - lowerBound));
+		vfsize = (vc >= (vfp - lowerBound - size) && vc < (vfp - lowerBound));
 	end
 endfunction
 
@@ -279,6 +279,22 @@ function car;
 	reg[9:0] increment_counter;
 	begin
 		case (direction)
+			0:
+				begin
+					orientation = 0;
+					if (speed == 1)
+						increment_counter = y_increment_speed1_reverse;
+					else if (speed == 2)
+						increment_counter = y_increment_speed2_reverse;
+						
+					if (rectangle_size_reverse(x, y + increment_counter, car_height, car_width))
+					begin
+						rgb = color;
+						car = 1;
+					end
+					else
+						car = 0;
+				end
 			1:
 				begin
 					orientation = 1;
@@ -310,10 +326,30 @@ function car;
 					end
 					else
 						car = 0;
+				end	
+			3:
+				begin
+					orientation = 1;
+					if (speed == 1)
+						increment_counter = x_increment_speed1_reverse;
+					else if (speed == 2)
+						increment_counter = x_increment_speed2_reverse;
+						
+					if (rectangle_size_reverse(x + increment_counter, y, car_width, car_height))
+					begin
+						rgb = color;
+						car = 1;
+					end
+					else
+						car = 0;
 				end
 		endcase
 	end
 endfunction
+
+//function collision;
+//	
+//endfunction;
 
 reg[1:0] flag = 1'b0;
 
@@ -321,8 +357,14 @@ reg[1:0] flag = 1'b0;
 reg[9:0] x_increment_speed1 = 10'b0000000000;
 reg[9:0] x_increment_speed2 = 10'b0000000000;
 
+reg[9:0] x_increment_speed1_reverse = 10'b0000000000;
+reg[9:0] x_increment_speed2_reverse = 10'b0000000000;
+
 reg[9:0] y_increment_speed1 = 10'b0000000000;
 reg[9:0] y_increment_speed2 = 10'b0000000000;
+
+reg[9:0] y_increment_speed1_reverse = 10'b0000000000;
+reg[9:0] y_increment_speed2_reverse = 10'b0000000000;
 
 //always @ (posedge clk)
 //	if animateClk
@@ -332,6 +374,20 @@ always @(posedge dclk)
 begin
     if (animateClk == 1'b1 && flag == 1'b0)
     begin
+	 
+		  //North
+		  if (traffic0_color)
+		  begin
+		  	   y_increment_speed1_reverse = y_increment_speed1_reverse + 1;
+				y_increment_speed2_reverse = y_increment_speed2_reverse + 2;
+		  end
+		  else
+		  begin
+				if (y_increment_speed1_reverse < 60 || y_increment_speed1_reverse > 60)
+					y_increment_speed1_reverse = y_increment_speed1_reverse + 1;
+				if (y_increment_speed2_reverse < 60 || y_increment_speed2_reverse > 60)
+					y_increment_speed2_reverse = y_increment_speed2_reverse + 2;
+		  end
 		
 		  if (traffic1_color)
 		  begin
@@ -345,6 +401,33 @@ begin
 				if (x_increment_speed2 < 140 || x_increment_speed2 > 140)
 					x_increment_speed2 = x_increment_speed2 + 2;
 		  end
+		  
+		  if (traffic2_color)
+		  begin
+		  	   y_increment_speed1 = y_increment_speed1 + 1;
+				y_increment_speed2 = y_increment_speed2 + 2;
+		  end
+		  else
+		  begin
+				if (y_increment_speed1 < 60 || y_increment_speed1 > 60)
+					y_increment_speed1 = y_increment_speed1 + 1;
+				if (y_increment_speed2 < 60 || y_increment_speed2 > 60)
+					y_increment_speed2 = y_increment_speed2 + 2;
+		  end
+		  
+		  if (traffic3_color)
+		  begin
+		  	   x_increment_speed1_reverse = x_increment_speed1_reverse + 1;
+				x_increment_speed2_reverse = x_increment_speed2_reverse + 2;
+		  end
+		  else
+		  begin
+				if (x_increment_speed1_reverse < 140 || x_increment_speed1_reverse > 140)
+					x_increment_speed1_reverse = x_increment_speed1_reverse + 1;
+				if (x_increment_speed2_reverse < 140 || x_increment_speed2_reverse > 140)
+					x_increment_speed2_reverse = x_increment_speed2_reverse + 2;
+		  end
+		  
         flag = 1'b1;
     end
     else if (animateClk == 1'b0)
@@ -354,12 +437,14 @@ begin
 	//NOTE
 	//We always draw in the hierarchy of the smallest elements on the screen to the larger onesa
 	// first check if we're within vertical active video range
-	//car(car_numner, x, y, color, speed, direction, isMoving);
-	if (vc >= vbp && vc < vfp)
+	if (vc >= vbp && vc < vfp && hc >= hbp && hc < hfp)
 	begin
 	
+		//begin drawing
+		if(0); 
+		
 		//draw the traffic lights
-		if (red_light(363, 5))
+		else if (red_light(363, 5))
 			rgb = traffic0_color ? color_black : color_red;
 		else if (red_light(615, 283)) 
 			rgb = traffic1_color ? color_black : color_red;
@@ -388,14 +473,26 @@ begin
 		end
 		
 		//draw the cars
-		else if (car(1, 0, 255, color_cyan, 1, 1, 1));
-//		else if (car(1, 70, 255, color_magenta, 1, 1, 1));
-//		else if (car(1, 140, 255, color_green, 1, 1, 1));
-		else if (car(1, 0, 315, color_blue, 2, 1, 1));
-//		else if (car(1, 80, 315, color_green, 2, 1, 1));
-//		else if (car(1, 150, 315, color_blue, 2, 1, 1));
-		else if (car(1, 275, 0, color_yellow, 1, 2, traffic1_color));
+		//car(car_numner, x, y, color, speed, direction, isMoving);
 		
+		//Cars to the north
+		else if (car(0, 275, 0, color_white, 1, 0, 1));
+		else if (car(1, 215, 0, color_green, 2, 0, 1));
+		
+		//Cars to the east
+		else if (car(2, 0, 315, color_blue, 1, 1, 1));
+		else if (car(3, 0, 255, color_cyan, 2, 1, 1));
+		
+		//Cars to the south
+		else if (car(4, 275, 0, color_yellow, 1, 2, 1));
+		else if (car(5, 215, 0, color_green, 2, 2, 1));
+		
+		//Cars to the west
+		else if (car(6, 0, 315, color_magenta, 1, 3, 1));
+		else if (car(7, 0, 255, color_red, 2, 3, 1));		
+		
+//		else if (vfrange(10,100))
+//			rgb = red;
 		
 		//draw the black square in the center
 		else if (rectangle_coords(200, 120, 440, 360))
