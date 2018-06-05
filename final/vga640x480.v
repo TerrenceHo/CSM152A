@@ -320,8 +320,14 @@ reg[1:0] flag = 1'b0;
 reg[9:0] x_increment_speed1 = 10'b0000000000;
 reg[9:0] x_increment_speed2 = 10'b0000000000;
 
+reg[9:0] x_increment_speed1_reverse = 10'b0000000000;
+reg[9:0] x_increment_speed2_reverse = 10'b0000000000;
+
 reg[9:0] y_increment_speed1 = 10'b0000000000;
 reg[9:0] y_increment_speed2 = 10'b0000000000;
+
+reg[9:0] y_increment_speed1_reverse = 10'b0000000000;
+reg[9:0] y_increment_speed2_reverse = 10'b0000000000;
 
 //always @ (posedge clk)
 //	if animateClk
@@ -344,6 +350,20 @@ begin
 				if (x_increment_speed2 < 140 || x_increment_speed2 > 140)
 					x_increment_speed2 = x_increment_speed2 + 2;
 		  end
+		  
+		  if (traffic2_color)
+		  begin
+		  	   y_increment_speed1 = y_increment_speed1 + 1;
+				y_increment_speed2 = y_increment_speed2 + 2;
+		  end
+		  else
+		  begin
+				if (y_increment_speed1 < 60 || y_increment_speed1 > 140)
+					y_increment_speed1 = y_increment_speed1 + 1;
+				if (y_increment_speed2 < 60 || y_increment_speed2 > 140)
+					y_increment_speed2 = y_increment_speed2 + 2;
+		  end
+		  
         flag = 1'b1;
     end
     else if (animateClk == 1'b0)
@@ -353,7 +373,6 @@ begin
 	//NOTE
 	//We always draw in the hierarchy of the smallest elements on the screen to the larger onesa
 	// first check if we're within vertical active video range
-	//car(car_numner, x, y, color, speed, direction, isMoving);
 	if (vc >= vbp && vc < vfp)
 	begin
 	
@@ -386,13 +405,15 @@ begin
 		end
 		
 		//draw the cars
-		else if (car(1, 0, 255, color_cyan, 1, 1, 1));
-//		else if (car(1, 70, 255, color_magenta, 1, 1, 1));
-//		else if (car(1, 140, 255, color_green, 1, 1, 1));
-		else if (car(1, 0, 315, color_blue, 2, 1, 1));
-//		else if (car(1, 80, 315, color_green, 2, 1, 1));
-//		else if (car(1, 150, 315, color_blue, 2, 1, 1));
-		else if (car(1, 275, 0, color_yellow, 1, 2, traffic1_color));
+		//car(car_numner, x, y, color, speed, direction, isMoving);
+		
+		//Cars to the east
+		else if (car(1, 0, 315, color_blue, 1, 1, 1));
+		else if (car(1, 0, 255, color_cyan, 2, 1, 1));
+		
+		//Cars to the south
+		else if (car(1, 275, 0, color_yellow, 1, 2, 2));
+		else if (car(1, 215, 0, color_green, 2, 2, 2));
 		
 		
 		//draw the black square in the center
