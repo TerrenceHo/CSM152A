@@ -56,6 +56,7 @@ module nexys3(
 	reg [2:0] step_d;
 	reg [2:0] step_e;
 	reg [7:0] inst_cnt;
+	reg is_running = 1'b0;
 	
 	wire[1:0] sel = sw[1:0];
 	wire color_sel = sw[2];
@@ -127,15 +128,21 @@ module nexys3(
 		else
 			inst_pause <= 0;
 			
+	always @ (posedge clk)
+		if (rst)
+			is_running <= 1'b0;
+		else if (is_btnS_posedge)
+			is_running <= 1; //~is_running;
+			
 	/////////////////////////////////////////		
 	////////// Instruction Counter //////////
 	/////////////////////////////////////////
-//	always @ (posedge clk)
-//		if (rst)
-//			inst_cnt <= 0;
-//		else if (inst_pause)
-//			inst_cnt <= inst_cnt + 1;
-//	assign led[7:0] = inst_cnt[7:0];
+	always @ (posedge clk)
+		if (rst)
+			inst_cnt <= 0;
+		else if (inst_pause)
+			inst_cnt <= inst_cnt + 1;
+	assign led[7:0] = inst_cnt[7:0];
 
 	/////////////////////////////
 	////////// Modules //////////
@@ -148,37 +155,37 @@ module nexys3(
 	);
 	
 	traffic_light light0 ( //inputs
-		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .inst_go(is_btnS_posedge),
+		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .is_running(is_running),
 		.traffic_sel(sel), .color_sel(color_sel), .start_color(start_color), 
 		.input_time(num), .traffic_num(2'b00),
 		// outputs
 		.traffic_color(traffic0_color)
 	);
 	traffic_light light1 ( //inputs
-		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .inst_go(is_btnS_posedge),
+		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .is_running(is_running),
 		.traffic_sel(sel), .color_sel(color_sel), .start_color(start_color), 
 		.input_time(num), .traffic_num(2'b01),
 		// outputs
 		.traffic_color(traffic1_color)
 	);
 	traffic_light light2 ( //inputs
-		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .inst_go(is_btnS_posedge),
+		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .is_running(is_running),
 		.traffic_sel(sel), .color_sel(color_sel), .start_color(start_color), 
 		.input_time(num), .traffic_num(2'b10),
 		// outputs
 		.traffic_color(traffic2_color)
 	);
 	traffic_light light3 ( //inputs
-		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .inst_go(is_btnS_posedge),
+		.clk(clk), .rst(rst), .inst_send(is_btn1_posedge), .is_running(is_running),
 		.traffic_sel(sel), .color_sel(color_sel), .start_color(start_color), 
 		.input_time(num), .traffic_num(2'b11),
 		// outputs
 		.traffic_color(traffic3_color)
 	);
 	
-	always @ (posedge clk)
-		inst_cnt[7] <= traffic3_color;
-	assign led = inst_cnt;
+//	always @ (posedge clk)
+//		inst_cnt[7] <= traffic3_color;
+//	assign led = inst_cnt;
 	
 	// VGA controller
 	// generate 7-segment clock & display clock
