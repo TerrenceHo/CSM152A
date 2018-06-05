@@ -208,7 +208,8 @@ module nexys3(
 		.vsync(vsync),
 		.red(vgaRed),
 		.green(vgaGreen),
-		.blue(vgaBlue)
+		.blue(vgaBlue),
+		.is_game_over(is_game_over)
 	);
 
 
