@@ -28,9 +28,18 @@ input [3:0] carIndex;
 output collision;
 
 reg collision_reg;
-reg [9:0] carArrX [11:0];
-reg [9:0] carArrY [11:0];
-reg [1:0] carArrOrient [11:0];
+reg [9:0] carArrX [7:0] ;
+reg [9:0] carArrY [7:0];
+reg [1:0] carArrOrient [7:0];
+
+initial begin
+	for (i=0; i<7; i=i+1)
+	begin
+		carArrX[i] = 0;
+		carArrY[i] = 0;
+		carArrOrient[i] = 0;
+	end
+end
 
 always @ (posedge clk)
 begin
@@ -43,16 +52,16 @@ integer i;
 integer j;
 always @ (posedge clk)
 begin
-	for(i=0; i < 12; i=i+1)
+	for(i=0; i < 8; i=i+1)
 	begin
-		for(j=0; j < 12; j=j+1)
+		for(j=0; j < 8; j=j+1)
 		begin
 			if(carArrOrient[i] != carArrOrient[j])
 			begin
 				if(carArrOrient[i] == 1)
 				begin
-					if((carArrX[i] >= carArrX[j] && carArrX[i] <= carArrX[j] + 60) || 
-					(carArrX[i] + 30 >= carArrX[j] || carArrX[i] + 30 <=  carArrX[j] + 60))
+					if((carArrX[i] >= carArrX[j] && carArrX[i] <= (carArrX[j] + 60)) || 
+					((carArrX[i] + 30) >= carArrX[j] && (carArrX[i] + 30) <=  (carArrX[j] + 60)))
 					begin
 						if((carArrY[i] >= carArrY[j] && carArrY[i] <= carArrY[j] + 30) || 
 						(carArrY[i] + 60 >= carArrY[j] && carArrY[i] + 60 <= carArrY[j] + 30))
