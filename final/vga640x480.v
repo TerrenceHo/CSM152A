@@ -106,8 +106,19 @@ reg[7:0] color_red = 8'b11100000;
 reg[7:0] color_blue = 8'b00000011;
 
 //cars
+reg collision = 0;
 reg[9:0] car_width = 60;
 reg[9:0] car_height = 30;
+
+reg [9:0] carArrX [7:0];
+reg [9:0] carArrY [7:0];
+reg [1:0] carArrOrient [7:0];
+
+//Collision Detection Inputs
+reg[9:0] carX;
+reg[9:0] carY;
+reg[1:0] carOrient;
+reg[3:0] carIndex;
 
 //functions
 //1) hbrange takes the lower and upper bound wrt to the beginning
@@ -268,7 +279,7 @@ endfunction
 //Orientation (computed from direction): 0 is vertical and 1 is horizontal
 //Speed: 1 is increment_speed1 and 2 is increment speed2
 function car;
-	input[4:0] car_number;
+	input[3:0] car_number;
 	input[9:0] x, y;
 	input[7:0] color;
 	input[2:0] speed;
@@ -336,7 +347,7 @@ function car;
 						increment_counter = x_increment_speed2_reverse;
 						
 					if (rectangle_size_reverse(x + increment_counter, y, car_width, car_height))
-					begin
+					begin	
 						rgb = color;
 						car = 1;
 					end
@@ -344,12 +355,42 @@ function car;
 						car = 0;
 				end
 		endcase
+				carArrX[car_number] = x;
+				carArrY[car_number] = y;
+				carArrOrient[car_number] = orientation;
 	end
 endfunction
 
-//function collision;
-//	
-//endfunction;
+reg [3:0] i;
+reg [3:0] j;
+
+always @(negedge animateClk)
+begin
+	for(i=0; i < 8; i=i+1)
+		for(j=0; j < 8; j=j+1)
+		begin
+			if(carArrOrient[i] != carArrOrient[j])
+			begin
+				if(carArrOrient[i] == 1)
+				begin
+					if((carArrX[i] >= carArrX[j] && carArrX[i] <= (carArrX[j] + 60)) || 
+					((carArrX[i] + 30) >= carArrX[j] && (carArrX[i] + 30) <=  (carArrX[j] + 60)))
+					begin
+						if((carArrY[i] >= carArrY[j] && carArrY[i] <= carArrY[j] + 30) || 
+						(carArrY[i] + 60 >= carArrY[j] && carArrY[i] + 60 <= carArrY[j] + 30))
+							collision <= 1'b1;
+						else
+							collision <= 1'b0;
+					end
+					if((carArrX[i] >= carArrX[j] && carArrX[i] + 30 <= carArrX[j] + 60) && 
+					(carArrY[i] <= carArrY[j] && carArrY[i] + 60 >= carArrY[j] + 30))
+						collision <= 1'b1;
+					else
+						collision <= 1'b0;
+				end
+			end
+		end
+end
 
 reg[1:0] flag = 1'b0;
 
@@ -366,13 +407,10 @@ reg[9:0] y_increment_speed2 = 10'b0000000000;
 reg[9:0] y_increment_speed1_reverse = 10'b0000000000;
 reg[9:0] y_increment_speed2_reverse = 10'b0000000000;
 
-//always @ (posedge clk)
-//	if animateClk
-//		dfj
 // Assignment statements can only be used on type "reg" and should be of the "blocking" type: =
 always @(posedge dclk)
 begin
-    if (animateClk == 1'b1 && flag == 1'b0)
+    if (animateClk == 1'b1 && flag == 1'b0 && collision == 1'b0)
     begin
 	 
 		  //North
@@ -491,9 +529,6 @@ begin
 		else if (car(6, 0, 315, color_magenta, 1, 3, 1));
 		else if (car(7, 0, 255, color_red, 2, 3, 1));		
 		
-//		else if (vfrange(10,100))
-//			rgb = red;
-		
 		//draw the black square in the center
 		else if (rectangle_coords(200, 120, 440, 360))
 			rgb = color_black;
@@ -540,14 +575,14 @@ begin
 	blue = rgb[1:0];
 
 end
-
-	collision_detection collision_detection_( 
-		.clk(dclk), 
-		.carX(carX), 
-		.carY(carY), 
-		.carOrient(carOrient), 
-		.carIndex(carIndex), 
-		.collision(is_game_over)
-    );
+	
+//	collision_detection collision_detection_( 
+//		.clk(dclk), 
+//		.carX(carX), 
+//		.carY(carY), 
+//		.carOrient(carOrient), 
+//		.carIndex(carIndex), 
+//		.collision(is_game_over)
+//    );
 
 endmodule

@@ -54,7 +54,7 @@ module stopwatch(
 		else if (clk_en_d && (inst_pause == 1) )
 			is_paused <= ~is_paused;
 		else if (is_game_over)
-			is_paused = 1'b1;
+			is_paused <= 1'b1;
 
 	///////////////////
 	///// Modules /////
