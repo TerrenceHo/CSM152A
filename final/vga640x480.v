@@ -106,9 +106,6 @@ reg[7:0] color_red = 8'b11100000;
 reg[7:0] color_blue = 8'b00000011;
 
 //cars
-reg collision = 0;
-assign is_game_over = collision;
-
 reg[9:0] car_width = 60;
 reg[9:0] car_height = 30;
 
@@ -116,11 +113,13 @@ reg [9:0] carArrX [7:0];
 reg [9:0] carArrY [7:0];
 reg [1:0] carArrOrient [7:0];
 
-//Collision Detection Inputs
-reg[9:0] carX;
-reg[9:0] carY;
-reg[1:0] carOrient;
-reg[3:0] carIndex;
+//game stats
+reg collision = 0;
+assign is_game_over = collision;
+
+reg [9:0] winScore = 20;
+reg [9:0] currentScore = 0;
+reg didWin = 0;
 
 //functions
 //1) hbrange takes the lower and upper bound wrt to the beginning
@@ -380,6 +379,7 @@ function car;
 	end
 endfunction
 
+//registers for loop upto 8
 reg [3:0] i;
 reg [3:0] j;
 
@@ -441,9 +441,8 @@ reg[9:0] y_increment_speed2_reverse = 10'b0000000000;
 // Assignment statements can only be used on type "reg" and should be of the "blocking" type: =
 always @(posedge dclk)
 begin
-    if (animateClk == 1'b1 && flag == 1'b0 && collision == 1'b0)
+    if (animateClk == 1'b1 && flag == 1'b0 && collision == 1'b0 && didWin == 1'b0)
     begin
-	 
 		  //North
 		  if (traffic0_color)
 		  begin
@@ -496,6 +495,28 @@ begin
 				if (x_increment_speed2_reverse < 140 || x_increment_speed2_reverse > 140)
 					x_increment_speed2_reverse = x_increment_speed2_reverse + 2;
 		  end
+		  
+			//if a car crosses the intersection area the current score increases
+			if (x_increment_speed1 == 440)
+				currentScore = currentScore + 1;
+			if (x_increment_speed1_reverse == 440)
+				currentScore = currentScore + 1;
+			if (x_increment_speed2 == 440)
+				currentScore = currentScore + 1;
+			if (x_increment_speed2_reverse == 440)
+				currentScore = currentScore + 1;
+				
+			if (y_increment_speed1 == 360)
+				currentScore = currentScore + 1;
+			if (y_increment_speed1_reverse == 360)
+				currentScore = currentScore + 1;
+			if (y_increment_speed2 == 360)
+				currentScore = currentScore + 1;
+			if (y_increment_speed2_reverse == 360)
+				currentScore = currentScore + 1;
+				
+		if (currentScore >= winScore)
+			didWin = 1;
 		  
         flag = 1'b1;
     end
