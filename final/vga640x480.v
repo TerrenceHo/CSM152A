@@ -563,7 +563,10 @@ begin
 				currentScore = currentScore + 1;
 				
 		if (currentScore >= winScore)
+		begin
 			didWin = 1;
+			collision = 1;
+		end
 		  
         flag = 1'b1;
     end
