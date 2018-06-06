@@ -382,28 +382,24 @@ reg [3:0] j;
 always @(negedge animateClk)
 begin
 	for(i=0; i < 8; i=i+1)
-		for(j=i+1; j < 8; j=j+1)
+		for(j=0; j < 8; j=j+1)
 		begin
-			if(carArrOrient[i] != carArrOrient[j])
-			begin
-				if(carArrOrient[i] == 0)
+			//Car i (vertical)
+			//(x,y) 						(x + car_height)
+			//(x,y + car_width)     (x + car_height,y + car_width)
+			
+			//Car j (horizontal)
+			//(x,y)						(x + car_width,y)
+			//(x,y + car_height) 	(x + car_width,y + car_height)
+			if(carArrOrient[i] == 0 && carArrOrient[j] == 1 && i != j)
 				begin
-					if((carArrX[i] >= carArrX[j] && carArrX[i] <= (carArrX[j] + 60)) || 
-					((carArrX[i] + 30) >= carArrX[j] && (carArrX[i] + 30) <=  (carArrX[j] + 60)))
-					begin
-						if((carArrY[i] >= carArrY[j] && carArrY[i] <= carArrY[j] + 30) || 
-						(carArrY[i] + 60 >= carArrY[j] && carArrY[i] + 60 <= carArrY[j] + 30))
-							collision <= 1'b1;
-						else
-							collision <= collision;
-					end
-					if((carArrX[i] >= carArrX[j] && carArrX[i] + 30 <= carArrX[j] + 60) && 
-					(carArrY[i] <= carArrY[j] && carArrY[i] + 60 >= carArrY[j] + 30))
-						collision <= 1'b1;
-					else
-						collision <= collision;
+					if ((((carArrY[i] >= carArrY[j]) && (carArrY[i] <= carArrY[j] + car_height))
+							|| (((carArrY[i] + car_width) >= carArrY[j]) && ((carArrY[i] + car_width) <= (carArrY[j] + car_height))))
+						&&
+						(((carArrX[i] >= carArrX[j]) && (carArrX[i]<= carArrX[j] + car_width))
+							|| ((carArrX[i] + car_height >= carArrX[j]) && (carArrX[i] + car_height<= carArrX[j] + car_width))))
+						collision = 1;
 				end
-			end
 		end
 end
 
@@ -421,6 +417,22 @@ reg[9:0] y_increment_speed2 = 10'b0000000000;
 
 reg[9:0] y_increment_speed1_reverse = 10'b0000000000;
 reg[9:0] y_increment_speed2_reverse = 10'b0000000000;
+
+//					if((carArrX[i] <= carArrX[j] && carArrX[i] >= (carArrX[j] + car_width)) || 
+//					((carArrX[i] + car_height) <= carArrX[j] && (carArrX[i] + car_height) >=  (carArrX[j] + car_width)))
+//					begin
+//						collision <= 1'b1;
+//						if((carArrY[i] >= carArrY[j] && carArrY[i] <= carArrY[j] + 30) || 
+//						(carArrY[i] + 60 >= carArrY[j] && carArrY[i] + 60 <= carArrY[j] + 30))
+//							collision <= 1'b1;
+//						else
+//							collision <= collision;
+//					end
+//					if((carArrX[i] >= carArrX[j] && carArrX[i] + 30 <= carArrX[j] + 60) && 
+//					(carArrY[i] <= carArrY[j] && carArrY[i] + 60 >= carArrY[j] + 30))
+//						collision <= 1'b1;
+//					else
+//						collision <= collision;
 
 // Assignment statements can only be used on type "reg" and should be of the "blocking" type: =
 always @(posedge dclk)
@@ -529,8 +541,8 @@ begin
 		//car(car_numner, x, y, color, speed, direction, isMoving);
 		
 		//Cars to the north
-		else if (car(0, 275, 0, color_white, 1, 0, 1));
-		else if (car(1, 215, 0, color_green, 2, 0, 1));
+//		else if (car(0, 275, 0, color_white, 1, 0, 1));
+//		else if (car(1, 215, 0, color_green, 2, 0, 1));
 		
 		//Cars to the east
 		else if (car(2, 0, 315, color_blue, 1, 1, 1));
@@ -541,8 +553,8 @@ begin
 		else if (car(5, 215, 0, color_green, 2, 2, 1));
 		
 		//Cars to the west
-		else if (car(6, 0, 315, color_magenta, 1, 3, 1));
-		else if (car(7, 0, 255, color_red, 2, 3, 1));		
+//		else if (car(6, 0, 315, color_magenta, 1, 3, 1));
+//		else if (car(7, 0, 255, color_red, 2, 3, 1));		
 		
 		//draw the black square in the center
 		else if (rectangle_coords(200, 120, 440, 360))
