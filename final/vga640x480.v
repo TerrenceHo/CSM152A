@@ -301,7 +301,9 @@ function car;
 						increment_counter = y_increment_speed2_reverse;
 					
 					carArrX[car_number] = x;
-					carArrY[car_number] = y + increment_counter;
+					//make sure the coords are not negative
+					if ((y + increment_counter) <= 480)
+						carArrY[car_number] = 480 - (y + increment_counter);
 					carArrOrient[car_number] = orientation;
 						
 					if (rectangle_size_reverse(x, y + increment_counter, car_height, car_width))
@@ -360,7 +362,9 @@ function car;
 					else if (speed == 2)
 						increment_counter = x_increment_speed2_reverse;
 					
-					carArrX[car_number] = x + increment_counter;
+					//make sure the coords are not negative
+					if ((x + increment_counter) <= 640)
+						carArrX[car_number] = 640 - (x + increment_counter);
 					carArrY[car_number] = y;
 					carArrOrient[car_number] = orientation;
 					
@@ -541,8 +545,8 @@ begin
 		//car(car_numner, x, y, color, speed, direction, isMoving);
 		
 		//Cars to the north
-//		else if (car(0, 275, 0, color_white, 1, 0, 1));
-//		else if (car(1, 215, 0, color_green, 2, 0, 1));
+		else if (car(0, 275, 0, color_white, 1, 0, 1));
+		else if (car(1, 215, 0, color_green, 2, 0, 1));
 		
 		//Cars to the east
 		else if (car(2, 0, 315, color_blue, 1, 1, 1));
@@ -553,8 +557,8 @@ begin
 		else if (car(5, 215, 0, color_green, 2, 2, 1));
 		
 		//Cars to the west
-//		else if (car(6, 0, 315, color_magenta, 1, 3, 1));
-//		else if (car(7, 0, 255, color_red, 2, 3, 1));		
+		else if (car(6, 0, 315, color_magenta, 1, 3, 1));
+		else if (car(7, 0, 255, color_red, 2, 3, 1));		
 		
 		//draw the black square in the center
 		else if (rectangle_coords(200, 120, 440, 360))
