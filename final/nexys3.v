@@ -58,6 +58,7 @@ module nexys3(
 	reg [7:0] inst_cnt;
 	reg is_running = 1'b0;
 	reg is_game_over = 1'b0;
+	wire is_game_over_w;
 	
 	wire[1:0] sel = sw[1:0];
 	wire color_sel = sw[2];
@@ -209,8 +210,14 @@ module nexys3(
 		.red(vgaRed),
 		.green(vgaGreen),
 		.blue(vgaBlue),
-		.is_game_over(is_game_over)
+		.is_game_over(is_game_over_w)
 	);
-
+	
+	always @ (posedge clk) begin
+		if (rst)
+			is_game_over <= 0;
+		else if (is_game_over_w)
+			is_game_over <= 1;
+	end
 
 endmodule 
