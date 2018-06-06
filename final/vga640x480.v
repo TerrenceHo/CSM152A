@@ -276,6 +276,53 @@ function green_light;
 	end
 endfunction
 
+function digit;
+	input [9:0] x, y;
+	input [3:0] number;
+	input [7:0] color;
+	reg [6:0] displayBits = 0;
+	begin
+		case(number)
+			0:	displayBits = 7'b1011111;
+			1: displayBits = 7'b0001100;
+			2: displayBits = 7'b1111001;
+			3: displayBits = 7'b1111100;
+			4: displayBits = 7'b0101110;
+			5: displayBits = 7'b1110110;
+			6: displayBits = 7'b1110111;
+			7: displayBits = 7'b1001100;
+			8: displayBits = 7'b1111111;
+			9: displayBits = 7'b1111110;
+		endcase
+		
+		//set the function return value to be true;
+		digit = 1;
+		
+		//top - 6
+		if (rectangle_size(x, y, 8, 2) && displayBits[6])
+			rgb = color;
+		//middle - 5
+		else if (rectangle_size(x, y + 5, 8, 2) && displayBits[5])
+			rgb = color;
+		//bottom - 4
+		else if (rectangle_size(x, y + 10, 8, 2) && displayBits[4])
+			rgb = color;
+		//right-top - 3
+		else if (rectangle_size(x + 6, y, 2, 6) && displayBits[3])
+			rgb = color;
+		//right-bottom - 2
+		else if (rectangle_size(x + 6, y + 6, 2, 6) && displayBits[2])
+			rgb = color;
+		//left-top - 1
+		else if (rectangle_size(x, y, 2, 6) && displayBits[1])
+			rgb = color;
+		//left-bottom - 0
+		else if (rectangle_size(x, y + 6, 2, 6) && displayBits[0])
+			rgb = color;
+		else digit = 0;
+	end
+endfunction
+
 //Directions: 0 is top, 1 is right, 2 is down, and 3 is left
 //Orientation (computed from direction): 0 is vertical and 1 is horizontal
 //Speed: 1 is increment_speed1 and 2 is increment speed2
@@ -532,6 +579,9 @@ begin
 	
 		//begin drawing
 		if(0); 
+		
+		//draw the current score
+		if (digit(10, 10, color_black, currentScore));
 		
 		//draw the traffic lights
 		else if (red_light(363, 5))
